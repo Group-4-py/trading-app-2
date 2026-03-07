@@ -178,24 +178,26 @@ def compute_strategy_metrics(backtest_df: pd.DataFrame, initial_capital: float =
     drawdown = (backtest_df["portfolio_value"] - cummax) / cummax
     max_drawdown = drawdown.min()
 
-    # Trade stats
-    trades = backtest_df[backtest_df["action"].isin(["BUY", "SELL"])]
-    n_trades = len(trades)
+    # Trade stats (benchmark has no "action" column)
+    if "action" not in backtest_df.columns:
+        n_trades = 0
+        win_rate = 0.0
+    else:
+        trades = backtest_df[backtest_df["action"].isin(["BUY", "SELL"])]
+        n_trades = len(trades)
 
-    # Win rate: count sell trades where portfolio went up since last buy
-    sell_trades = backtest_df[backtest_df["action"] == "SELL"]
-    buy_trades = backtest_df[backtest_df["action"] == "BUY"]
+        sell_trades = backtest_df[backtest_df["action"] == "SELL"]
+        buy_trades = backtest_df[backtest_df["action"] == "BUY"]
 
-    wins = 0
-    for _, sell_row in sell_trades.iterrows():
-        # Find the most recent buy before this sell
-        prev_buys = buy_trades[buy_trades["step"] < sell_row["step"]]
-        if not prev_buys.empty:
-            buy_price = prev_buys.iloc[-1]["price"]
-            if sell_row["price"] > buy_price:
-                wins += 1
+        wins = 0
+        for _, sell_row in sell_trades.iterrows():
+            prev_buys = buy_trades[buy_trades["step"] < sell_row["step"]]
+            if not prev_buys.empty:
+                buy_price = prev_buys.iloc[-1]["price"]
+                if sell_row["price"] > buy_price:
+                    wins += 1
 
-    win_rate = wins / max(len(sell_trades), 1)
+        win_rate = wins / max(len(sell_trades), 1)
 
     return {
         "total_return": total_return,
