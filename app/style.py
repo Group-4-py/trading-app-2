@@ -16,20 +16,20 @@ def inject_custom_css():
 
         /* ── Root Variables ───────────────────────────────── */
         :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #111827;
-            --bg-card: #1a1f2e;
-            --accent-cyan: #00d4ff;
-            --accent-green: #00ff88;
-            --accent-red: #ff3366;
-            --accent-purple: #a855f7;
-            --accent-yellow: #fbbf24;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --border: #1e293b;
-            --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3);
-            --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
-            --glow-red: 0 0 20px rgba(255, 51, 102, 0.3);
+            --bg-primary: #090e1a;
+            --bg-secondary: #0d1526;
+            --bg-card: #111d30;
+            --accent-orange: #f5820d;
+            --accent-green: #22d07a;
+            --accent-red: #e8384f;
+            --accent-blue: #4a9eff;
+            --accent-yellow: #f5a623;
+            --text-primary: #f0f4f8;
+            --text-secondary: #8b9ec0;
+            --border: #1a2a44;
+            --glow-orange: 0 0 20px rgba(245, 130, 13, 0.3);
+            --glow-green: 0 0 20px rgba(34, 208, 122, 0.3);
+            --glow-red: 0 0 20px rgba(232, 56, 79, 0.3);
         }
 
         /* ── Global Overrides ─────────────────────────────── */
@@ -50,7 +50,7 @@ def inject_custom_css():
 
         /* ── Sidebar ──────────────────────────────────────── */
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #0d1321 0%, #111827 100%) !important;
+            background: linear-gradient(180deg, #0a1020 0%, #0d1526 100%) !important;
             border-right: 1px solid var(--border) !important;
         }
 
@@ -68,7 +68,7 @@ def inject_custom_css():
         }
 
         h1 {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -81,17 +81,17 @@ def inject_custom_css():
 
         /* ── Metric Cards ─────────────────────────────────── */
         [data-testid="stMetric"] {
-            background: linear-gradient(135deg, var(--bg-card), #1e2538) !important;
+            background: linear-gradient(135deg, var(--bg-card), #152038) !important;
             border: 1px solid var(--border) !important;
             border-radius: 12px !important;
             padding: 1rem 1.25rem !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
             transition: all 0.3s ease !important;
         }
 
         [data-testid="stMetric"]:hover {
-            border-color: var(--accent-cyan) !important;
-            box-shadow: var(--glow-cyan) !important;
+            border-color: var(--accent-orange) !important;
+            box-shadow: var(--glow-orange) !important;
             transform: translateY(-2px);
         }
 
@@ -106,8 +106,9 @@ def inject_custom_css():
 
         [data-testid="stMetric"] [data-testid="stMetricValue"] {
             font-family: 'Orbitron', sans-serif !important;
-            color: var(--accent-cyan) !important;
+            color: var(--accent-orange) !important;
             font-weight: 700 !important;
+            font-size: 1rem !important;
         }
 
         [data-testid="stMetricDelta"] svg {
@@ -135,9 +136,9 @@ def inject_custom_css():
         }
 
         .stTabs [aria-selected="true"] {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(168, 85, 247, 0.15)) !important;
-            color: var(--accent-cyan) !important;
-            border: 1px solid rgba(0, 212, 255, 0.3) !important;
+            background: linear-gradient(135deg, rgba(245, 130, 13, 0.15), rgba(74, 158, 255, 0.15)) !important;
+            color: var(--accent-orange) !important;
+            border: 1px solid rgba(245, 130, 13, 0.3) !important;
         }
 
         .stTabs [data-baseweb="tab-highlight"] {
@@ -163,15 +164,15 @@ def inject_custom_css():
 
         .stSelectbox > div > div:focus-within,
         .stMultiSelect > div > div:focus-within {
-            border-color: var(--accent-cyan) !important;
-            box-shadow: var(--glow-cyan) !important;
+            border-color: var(--accent-orange) !important;
+            box-shadow: var(--glow-orange) !important;
         }
 
         /* ── Buttons ──────────────────────────────────────── */
         .stButton > button {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(168, 85, 247, 0.15)) !important;
-            border: 1px solid var(--accent-cyan) !important;
-            color: var(--accent-cyan) !important;
+            background: linear-gradient(135deg, rgba(245, 130, 13, 0.15), rgba(74, 158, 255, 0.1)) !important;
+            border: 1px solid var(--accent-orange) !important;
+            color: var(--accent-orange) !important;
             font-family: 'Orbitron', sans-serif !important;
             font-weight: 600 !important;
             font-size: 0.8rem !important;
@@ -183,8 +184,8 @@ def inject_custom_css():
         }
 
         .stButton > button:hover {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(168, 85, 247, 0.3)) !important;
-            box-shadow: var(--glow-cyan) !important;
+            background: linear-gradient(135deg, rgba(245, 130, 13, 0.3), rgba(74, 158, 255, 0.2)) !important;
+            box-shadow: var(--glow-orange) !important;
             transform: translateY(-1px) !important;
         }
 
@@ -219,9 +220,9 @@ def inject_custom_css():
 
         /* ── Custom Card Helper ───────────────────────────── */
         .glass-card {
-            background: linear-gradient(135deg, rgba(26, 31, 46, 0.8), rgba(30, 41, 59, 0.6));
+            background: linear-gradient(135deg, rgba(17, 29, 48, 0.9), rgba(21, 32, 56, 0.7));
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(245, 130, 13, 0.12);
             border-radius: 16px;
             padding: 1.5rem;
             margin-bottom: 1rem;
@@ -229,54 +230,54 @@ def inject_custom_css():
         }
 
         .glass-card:hover {
-            border-color: rgba(0, 212, 255, 0.3);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+            border-color: rgba(245, 130, 13, 0.35);
+            box-shadow: 0 0 30px rgba(245, 130, 13, 0.1);
         }
 
         .signal-up {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
-            border: 1px solid rgba(0, 255, 136, 0.3);
+            background: linear-gradient(135deg, rgba(34, 208, 122, 0.1), rgba(34, 208, 122, 0.05));
+            border: 1px solid rgba(34, 208, 122, 0.3);
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
         }
 
         .signal-down {
-            background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(255, 51, 102, 0.05));
-            border: 1px solid rgba(255, 51, 102, 0.3);
+            background: linear-gradient(135deg, rgba(232, 56, 79, 0.1), rgba(232, 56, 79, 0.05));
+            border: 1px solid rgba(232, 56, 79, 0.3);
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
         }
 
         .signal-hold {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05));
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            background: linear-gradient(135deg, rgba(245, 166, 35, 0.1), rgba(245, 166, 35, 0.05));
+            border: 1px solid rgba(245, 166, 35, 0.3);
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
         }
 
         .neon-text-cyan {
-            color: var(--accent-cyan) !important;
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            color: var(--accent-orange) !important;
+            text-shadow: 0 0 10px rgba(245, 130, 13, 0.5);
         }
 
         .neon-text-green {
             color: var(--accent-green) !important;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 10px rgba(34, 208, 122, 0.5);
         }
 
         .neon-text-red {
             color: var(--accent-red) !important;
-            text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+            text-shadow: 0 0 10px rgba(232, 56, 79, 0.5);
         }
 
         .hero-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 2.8rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #00d4ff, #a855f7, #00ff88);
+            background: linear-gradient(135deg, #f5820d, #f5a623, #22d07a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -295,7 +296,7 @@ def inject_custom_css():
         }
 
         .team-card {
-            background: linear-gradient(135deg, var(--bg-card), #1e2538);
+            background: linear-gradient(135deg, var(--bg-card), #152038);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 1.5rem;
@@ -305,20 +306,20 @@ def inject_custom_css():
         }
 
         .team-card:hover {
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.2);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 25px rgba(245, 130, 13, 0.2);
             transform: translateY(-3px);
         }
 
         .team-card h4 {
             font-family: 'Orbitron', sans-serif !important;
-            color: var(--accent-cyan) !important;
+            color: var(--accent-orange) !important;
             font-size: 1rem;
             margin-bottom: 0.3rem;
         }
 
         .team-card .role {
-            color: var(--accent-purple) !important;
+            color: var(--accent-blue) !important;
             font-weight: 600;
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -341,8 +342,8 @@ def inject_custom_css():
         }
 
         .feature-box:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: var(--glow-cyan);
+            border-color: var(--accent-orange);
+            box-shadow: var(--glow-orange);
         }
 
         .feature-box .icon {
@@ -352,7 +353,7 @@ def inject_custom_css():
 
         .feature-box h5 {
             font-family: 'Orbitron', sans-serif !important;
-            color: var(--accent-cyan) !important;
+            color: var(--accent-orange) !important;
             font-size: 0.8rem;
             margin-bottom: 0.3rem;
         }
@@ -368,17 +369,17 @@ def inject_custom_css():
         }
 
         .badge-up {
-            background: rgba(0, 255, 136, 0.15);
-            color: #00ff88;
-            border: 2px solid rgba(0, 255, 136, 0.4);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            background: rgba(34, 208, 122, 0.15);
+            color: #22d07a;
+            border: 2px solid rgba(34, 208, 122, 0.4);
+            text-shadow: 0 0 10px rgba(34, 208, 122, 0.4);
         }
 
         .badge-down {
-            background: rgba(255, 51, 102, 0.15);
-            color: #ff3366;
-            border: 2px solid rgba(255, 51, 102, 0.4);
-            text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+            background: rgba(232, 56, 79, 0.15);
+            color: #e8384f;
+            border: 2px solid rgba(232, 56, 79, 0.4);
+            text-shadow: 0 0 10px rgba(232, 56, 79, 0.4);
         }
 
         /* ── Scrollbar ────────────────────────────────────── */
@@ -394,12 +395,12 @@ def inject_custom_css():
             border-radius: 3px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-cyan);
+            background: var(--accent-orange);
         }
 
         /* ── Slider ───────────────────────────────────────── */
         .stSlider > div > div > div > div {
-            background: var(--accent-cyan) !important;
+            background: var(--accent-orange) !important;
         }
 
         /* ── Hide Streamlit branding ──────────────────────── */

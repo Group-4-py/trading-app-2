@@ -3,6 +3,9 @@
 Main landing page (Streamlit entry point).
 """
 
+import base64
+import os
+
 import streamlit as st
 
 # ── Page Configuration (MUST be first Streamlit command) ─────────────
@@ -79,7 +82,7 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric("Companies Tracked", f"{len(TICKERS)}")
 with col2:
-    st.metric("Prediction Type", "Binary")
+    st.metric("Model Used", "Classification")
 with col3:
     st.metric("ML Features", "20+")
 with col4:
@@ -137,21 +140,21 @@ with st.expander("📐 View Detailed Data Flow Diagram", expanded=False):
     st.markdown(
         """
         ```
-        ┌──────────────┐     ┌──────────────────────┐     ┌──────────────────────┐
-        │   SimFin      │     │  Part 1: Analytics    │     │  Part 2: Web App     │
+        ┌──────────────-┐     ┌──────────────────────┐     ┌──────────────────────┐
+        │   SimFin      │     │  Part 1: Analytics   │     │  Part 2: Web App     │
         │   Platform    │     │                      │     │                      │
         │  ┌─────────┐  │     │  ┌───────┐           │     │  ┌──────────┐        │
         │  │  Bulk   ├──┼────►│  │  ETL  ├──►Features│     │  │ PySimFin ├───┐    │
         │  │Download │  │     │  └───────┘    │      │     │  │ Wrapper  │   │    │
         │  └─────────┘  │     │               ▼      │     │  └──────────┘   │    │
-        │  ┌─────────┐  │     │  ┌───────┐  ┌────┐  │     │       │         │    │
-        │  │   API   ├──┼────►│  │  ML   ├─►│.pkl│──┼────►│  ┌────▼─────┐   │    │
-        │  │Endpoint │  │     │  │ Model │  └────┘  │     │  │ Go Live  │   │    │
-        │  └─────────┘  │     │  └───────┘          │     │  │Dashboard │   │    │
-        └──────────────┘     │  ┌──────────┐       │     │  └──────────┘   │    │
-                              │  │ Strategy ├───────┼────►│  ┌──────────┐   │    │
-                              │  │ (Bonus) │       │     │  │Backtester│   │    │
-                              │  └──────────┘       │     │  └──────────┘   │    │
+        │  ┌─────────┐  │     │  ┌───────┐  ┌────┐   │     │       │         │    │
+        │  │   API   ├──┼────►│  │  ML   ├─►│.pkl│───┼────►│  ┌────▼─────┐   │    │
+        │  │Endpoint │  │     │  │ Model │  └────┘   │     │  │ Go Live  │   │    │
+        │  └─────────┘  │     │  └───────┘           │     │  │Dashboard │   │    │
+        └─────────────-─┘     │  ┌──────────┐        │     │  └──────────┘   │    │
+                              │  │ Strategy ├────────┼────►│  ┌──────────┐   │    │
+                              │  │          │        │     │  │Backtester│ <-|    │
+                              │  └──────────┘        │     │  └──────────┘        │
                               └──────────────────────┘     └──────────────────────┘
         ```
         """,
@@ -218,19 +221,57 @@ st.markdown("")
 st.markdown("---")
 
 # ── Development Team ─────────────────────────────────────────────────
+def _member_avatar(image_path: str) -> str:
+    """Return an <img> tag with base64-encoded photo, or a fallback emoji div."""
+    # image_path is relative to this file's directory (app/)
+    abs_path = os.path.join(os.path.dirname(__file__), image_path)
+    if os.path.isfile(abs_path):
+        with open(abs_path, "rb") as f:
+            data = base64.b64encode(f.read()).decode()
+        ext = abs_path.rsplit(".", 1)[-1].lower()
+        mime = "image/jpeg" if ext in ("jpg", "jpeg") else f"image/{ext}"
+        return (
+            f'<img src="data:{mime};base64,{data}" '
+            f'style="width:90px;height:90px;border-radius:50%;object-fit:cover;'
+            f'border:2px solid #f5820d;margin-bottom:0.5rem;" />'
+        )
+    return '<div style="font-size:2.5rem;margin-bottom:0.5rem;">👤</div>'
+
+
 st.markdown("## Development Team")
 st.markdown("")
+
+_LINKEDIN_ICON = """
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762
+           0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5
+           -11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75
+           1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337
+           -.026-3.063-1.867-3.063-1.869 0-2.155 1.459-2.155 2.967v5.7h-3v-10h2.879
+           v1.367h.041c.401-.761 1.381-1.563 2.843-1.563 3.041 0 3.604 2.002
+           3.604 4.604v5.592z"/>
+</svg>"""
 
 team_cols = st.columns(len(TEAM_MEMBERS))
 for col, member in zip(team_cols, TEAM_MEMBERS):
     with col:
+        avatar = _member_avatar(member.get("image", ""))
+        linkedin_url = member.get("linkedin", "")
+        linkedin_btn = (
+            f'<a href="{linkedin_url}" target="_blank" style="display:inline-flex;'
+            f'align-items:center;gap:6px;margin-top:0.6rem;padding:5px 12px;'
+            f'background:#0077b5;border-radius:6px;text-decoration:none;'
+            f'color:white;font-size:0.75rem;font-weight:600;">'
+            f'{_LINKEDIN_ICON}</a>'
+        ) if linkedin_url else ""
         st.markdown(
             f"""
             <div class="team-card">
-                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👤</div>
+                {avatar}
                 <h4>{member['name']}</h4>
                 <div class="role">{member['role']}</div>
                 <div class="focus">{member['focus']}</div>
+                {linkedin_btn}
             </div>
             """,
             unsafe_allow_html=True,
@@ -273,7 +314,7 @@ st.markdown(
     """
     <div style="text-align: center; padding: 2rem 0; border-top: 1px solid #1e293b; margin-top: 2rem;">
         <p style="color: #475569 !important; font-size: 0.8rem;">
-            AutoTrader v1.0 · Automated Daily Trading System · Group Assignment 2025
+            AutoTrader v1.0 · Automated Daily Trading System · Group Assignment 2026
         </p>
     </div>
     """,
