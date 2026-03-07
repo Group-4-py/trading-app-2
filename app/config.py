@@ -56,8 +56,10 @@ COLORS = {
 
 # ── Team Members (Replace with real names) ───────────────────────────
 TEAM_MEMBERS = [
-    {"name": "Alex Rivera", "role": "ML Engineer", "focus": "ETL & Model Development"},
-    {"name": "Jordan Chen", "role": "Backend Developer", "focus": "API Wrapper & Data Pipeline"},
-    {"name": "Sam Patel", "role": "Frontend Developer", "focus": "Streamlit App & Deployment"},
-    {"name": "Taylor Kim", "role": "Data Analyst", "focus": "Feature Engineering & Strategy"},
+    {"name": "Bojana Belincevic", "role": "ML Engineer", "focus": "ETL & Model Development"},
+    {"name": "David Carrillo", "role": "Backend Developer", "focus": "API Wrapper & Data Pipeline"},
+    {"name": "Sebastião Clemente", "role": "Frontend Developer", "focus": "App & Deployment"},
+    {"name": "Bassem El Halawani", "role": "Data Analyst", "focus": "Feature Engineering & Strategy"},
+    {"name": "Theo Henry", "role": "Product Lead", "focus": "Use Case Definition & Prioritization"},
+    {"name": "Ocke Moulijn", "role": "Insights Analyst", "focus": "Model Validation & Testing"},
 ]
