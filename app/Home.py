@@ -66,8 +66,7 @@ st.markdown(
         <br>
         <p style="color: #94a3b8; max-width: 700px; margin: 0 auto; font-size: 1.05rem; line-height: 1.7;">
             A machine-learning-driven platform that analyzes historical stock data,
-            predicts next-day market movements, and generates actionable trading signals
-            — all in real time through an interactive web interface.
+            predicts next-day market movements, and generates actionable trading signals.
         </p>
     </div>
     """,
@@ -80,7 +79,7 @@ st.markdown("")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.metric("Companies Tracked", f"{len(TICKERS)}")
+    st.metric("Stocks Tracked", f"{len(TICKERS)}")
 with col2:
     st.metric("Model Used", "Classification")
 with col3:
