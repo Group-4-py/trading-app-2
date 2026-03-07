@@ -104,10 +104,10 @@ with col_a:
                 🔬 Part 1 — Data Analytics (Offline)
             </h3>
             <ul style="color: #94a3b8; line-height: 2;">
-                <li><strong style="color: #a855f7;">ETL Pipeline</strong> — Extract & transform SimFin bulk data</li>
-                <li><strong style="color: #a855f7;">Feature Engineering</strong> — 20+ technical indicators</li>
-                <li><strong style="color: #a855f7;">ML Classification</strong> — Predict UP/DOWN movements</li>
-                <li><strong style="color: #a855f7;">Model Export</strong> — Serialized .pkl for production</li>
+                <li><strong style="color: #00c853;">ETL Pipeline</strong> — Extract & transform SimFin bulk data</li>
+                <li><strong style="color: #00c853;">Feature Engineering</strong> — 20+ technical indicators</li>
+                <li><strong style="color: #00c853;">ML Classification</strong> — Predict UP/DOWN movements</li>
+                <li><strong style="color: #00c853;">Model Export</strong> — Serialized .pkl for production</li>
             </ul>
         </div>
         """,
@@ -201,7 +201,7 @@ for col, (num, icon, title, desc) in zip(step_cols, steps):
             f"""
             <div class="glass-card" style="text-align: center; min-height: 200px;">
                 <div style="font-family: 'Orbitron', sans-serif; font-size: 2rem;
-                            color: #00d4ff; text-shadow: 0 0 15px rgba(0, 212, 255, 0.4);">
+                            color: #00c853; ">
                     {icon}
                 </div>
                 <h4 style="font-family: 'Orbitron', sans-serif; color: #e2e8f0 !important;
@@ -232,7 +232,7 @@ def _member_avatar(image_path: str) -> str:
         return (
             f'<img src="data:{mime};base64,{data}" '
             f'style="width:90px;height:90px;border-radius:50%;object-fit:cover;'
-            f'border:2px solid #f5820d;margin-bottom:0.5rem;" />'
+            f'border:2px solid #00d4ff;margin-bottom:0.5rem;" />'
         )
     return '<div style="font-size:2.5rem;margin-bottom:0.5rem;">👤</div>'
 
@@ -312,7 +312,7 @@ st.markdown("")
 st.markdown(
     """
     <div style="text-align: center; padding: 2rem 0; border-top: 1px solid #1e293b; margin-top: 2rem;">
-        <p style="color: #475569 !important; font-size: 0.8rem;">
+        <p style="color: #94a3b8 !important; font-size: 0.8rem;">
             AutoTrader v1.0 · Automated Daily Trading System · Group Assignment 2026
         </p>
     </div>

@@ -41,17 +41,17 @@ TRANSACTION_COST = 0.001  # 0.1% per trade
 
 # ── App Theme Colors ─────────────────────────────────────────────────
 COLORS = {
-    "bg_primary": "#090e1a",
-    "bg_secondary": "#0d1526",
-    "bg_card": "#111d30",
-    "accent_orange": "#f5820d",
-    "accent_green": "#22d07a",
-    "accent_red": "#e8384f",
-    "accent_blue": "#4a9eff",
-    "accent_yellow": "#f5a623",
-    "text_primary": "#f0f4f8",
-    "text_secondary": "#8b9ec0",
-    "border": "#1a2a44",
+    "bg_primary": "#0a0e17",
+    "bg_secondary": "#111827",
+    "bg_card": "#1a1f2e",
+    "accent_cyan": "#00d4ff",
+    "accent_green": "#00ff88",
+    "accent_red": "#ff3366",
+    "accent_purple": "#a855f7",
+    "accent_yellow": "#fbbf24",
+    "text_primary": "#e2e8f0",
+    "text_secondary": "#94a3b8",
+    "border": "#1e293b",
 }
 
 # ── Team Members ─────────────────────────────────────────────────────
