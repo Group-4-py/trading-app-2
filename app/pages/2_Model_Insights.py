@@ -3,6 +3,9 @@
 Explains the ML pipeline, shows metrics, feature importance, and confusion matrix.
 """
 
+import base64
+import os
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -22,7 +25,7 @@ inject_custom_css()
 
 # ── Sidebar ──────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### 🧠 Model Insights")
+    st.markdown("### Model Insights")
     st.markdown("---")
 
     selected_ticker = st.selectbox(
@@ -30,6 +33,19 @@ with st.sidebar:
         TICKER_LIST,
         format_func=lambda t: f"{TICKERS[t]['icon']} {t} — {TICKERS[t]['name']}",
     )
+
+    _sb_logo_path = os.path.join(os.path.dirname(__file__), "..", TICKERS[selected_ticker].get("header_image", ""))
+    if os.path.isfile(_sb_logo_path):
+        with open(_sb_logo_path, "rb") as _f:
+            _sb_data = base64.b64encode(_f.read()).decode()
+        _sb_ext = _sb_logo_path.rsplit(".", 1)[-1].lower()
+        _sb_mime = "image/jpeg" if _sb_ext in ("jpg", "jpeg") else f"image/{_sb_ext}"
+        st.markdown(
+            f'<div style="text-align:center;padding:0.5rem 0;">'
+            f'<img src="data:{_sb_mime};base64,{_sb_data}" '
+            f'style="max-width:100%;max-height:36px;object-fit:contain;" /></div>',
+            unsafe_allow_html=True,
+        )
 
     st.markdown("---")
     api_key = st.session_state.get("simfin_api_key", "")
