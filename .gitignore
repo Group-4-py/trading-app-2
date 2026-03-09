@@ -1,12 +1,5 @@
 .DS_Store
 data/raw/
 ml/models/
-
-
 __pycache__/
 data/raw/
-data/*.zip
-
-
-data/raw/
-data/*.zip
