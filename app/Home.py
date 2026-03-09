@@ -31,10 +31,10 @@ with st.sidebar:
         **AI-Powered Daily Trading System**
 
         Navigate through the pages:
-        - 🏠 **Home** – Overview
-        - 📈 **Go Live** – Real-time predictions
-        - 🧠 **Model Insights** – ML analysis
-        - 📊 **Backtesting** – Strategy simulator
+        - **Home** – Overview
+        - **Go Live** – Real-time predictions
+        - **Model Insights** – ML analysis
+        - **Backtesting** – Strategy simulator
         """
     )
     st.markdown("---")

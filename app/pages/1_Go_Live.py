@@ -26,7 +26,7 @@ inject_custom_css()
 
 # ── Sidebar Controls ─────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### 📈 Go Live Controls")
+    st.markdown("### Go Live Controls")
     st.markdown("---")
 
     selected_ticker = st.selectbox(
