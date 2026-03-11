@@ -215,7 +215,7 @@ if not processed_df.empty:
 st.markdown("---")
 
 # ── Price Charts ─────────────────────────────────────────────────────
-st.markdown("### 📊 Market Data Analysis")
+st.markdown("### Market Data Analysis")
 
 tab_candle, tab_tech, tab_indicators = st.tabs([
     "🕯️ Candlestick", "📉 Technical Analysis", "📏 Indicators"
@@ -239,7 +239,7 @@ with tab_indicators:
 st.markdown("---")
 
 # ── Prediction History ───────────────────────────────────────────────
-st.markdown("### 🔮 Prediction History")
+st.markdown("### Prediction History")
 
 pred_history = get_prediction_history(selected_ticker, model, n_days=pred_window, api_key=api_key)
 
@@ -291,7 +291,7 @@ if not pred_history.empty:
 st.markdown("---")
 
 # ── Feature Snapshot ─────────────────────────────────────────────────
-st.markdown("### 🧮 Latest Feature Values")
+st.markdown("### Latest Feature Values")
 
 if not features.empty:
     feature_data = features.iloc[0]
@@ -315,7 +315,7 @@ if not features.empty:
 st.markdown("---")
 
 # ── Returns Analysis ─────────────────────────────────────────────────
-st.markdown("### 📈 Returns Analysis")
+st.markdown("### Returns Analysis")
 st.plotly_chart(returns_distribution_chart(processed_df), use_container_width=True)
 
 # ── Raw Data Explorer ────────────────────────────────────────────────

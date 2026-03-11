@@ -16,6 +16,11 @@ TICKERS = {
 
 TICKER_LIST = list(TICKERS.keys())
 
+# ── App Logo ─────────────────────────────────────────────────────────
+# Drop your logo into app/assets/ with this filename (e.g. logo.png).
+# Supported formats: .png, .jpg, .jpeg, .svg, .webp
+APP_LOGO = "assets/logo.png"
+
 # ── SimFin API Configuration ─────────────────────────────────────────
 SIMFIN_BASE_URL = "https://backend.simfin.com/api/v4"
 SIMFIN_RATE_LIMIT = 0.5  # seconds between requests (max 2 req/s)

@@ -17,7 +17,7 @@ st.set_page_config(
 )
 
 from utils.style import inject_custom_css
-from utils.config import TICKERS, TEAM_MEMBERS
+from utils.config import TICKERS, TEAM_MEMBERS, APP_LOGO
 
 # ── Inject Theme ─────────────────────────────────────────────────────
 inject_custom_css()
@@ -57,10 +57,22 @@ with st.sidebar:
 
 
 # ── Hero Section ─────────────────────────────────────────────────────
-st.markdown("")
+_logo_html = ""
+_logo_abs = os.path.join(os.path.dirname(__file__), APP_LOGO)
+if os.path.isfile(_logo_abs):
+    with open(_logo_abs, "rb") as _f:
+        _logo_data = base64.b64encode(_f.read()).decode()
+    _logo_ext = _logo_abs.rsplit(".", 1)[-1].lower()
+    _logo_mime = "image/jpeg" if _logo_ext in ("jpg", "jpeg") else f"image/{_logo_ext}"
+    _logo_html = (
+        f'<img src="data:{_logo_mime};base64,{_logo_data}" '
+        f'style="width:300px;height:300px;object-fit:contain;margin-bottom:1rem;" />'
+    )
+
 st.markdown(
-    """
-    <div style="text-align: center; padding: 2rem 0 1rem 0;">
+    f"""
+    <div style="text-align: center; padding: 0rem 0 0.25rem 0;">
+        {_logo_html}
         <div class="hero-title">AUTOTRADER</div>
         <div class="hero-subtitle">AI-Powered Daily Trading System</div>
         <br>
@@ -83,7 +95,7 @@ with col1:
 with col2:
     st.metric("Model Used", "Classification")
 with col3:
-    st.metric("ML Features", "20+")
+    st.metric("Features", "20+")
 with col4:
     st.metric("Signal Frequency", "Daily")
 
@@ -301,7 +313,7 @@ st.markdown("")
 
 tech_cols = st.columns(5)
 techs = [
-    ("🐍", "Python 3.11", "Core Language"),
+    ("🐍", "Python", "Core Language"),
     ("📊", "Streamlit", "Web Framework"),
     ("🧠", "Scikit-learn", "ML Library"),
     ("📈", "Plotly", "Visualization"),

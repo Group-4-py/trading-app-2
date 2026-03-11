@@ -107,7 +107,7 @@ st.markdown(
 st.markdown("---")
 
 # ── Strategy Explanation ─────────────────────────────────────────────
-st.markdown("### 📖 Strategy Definitions")
+st.markdown("### Strategy Definitions")
 st.markdown("")
 
 s1, s2, s3 = st.columns(3)
@@ -223,7 +223,7 @@ if "bt_results" in st.session_state:
     dates = st.session_state["bt_dates"]
 
     # ── Portfolio Performance Chart ──────────────────────────────────
-    st.markdown("### 💰 Portfolio Performance")
+    st.markdown("### Portfolio Performance")
     st.markdown("")
 
     fig = portfolio_chart(results, bench, dates)
@@ -232,7 +232,7 @@ if "bt_results" in st.session_state:
     st.markdown("---")
 
     # ── Strategy Comparison Metrics ──────────────────────────────────
-    st.markdown("### 📊 Strategy Comparison")
+    st.markdown("### Strategy Comparison")
     st.markdown("")
 
     # Build comparison DataFrame
@@ -267,7 +267,7 @@ if "bt_results" in st.session_state:
     st.markdown("---")
 
     # ── Detailed Strategy Analysis ───────────────────────────────────
-    st.markdown("### 🔍 Detailed Strategy Analysis")
+    st.markdown("### Detailed Strategy Analysis")
 
     # Strategy selector for detailed view
     strategy_names = list(results.keys())
@@ -339,7 +339,7 @@ if "bt_results" in st.session_state:
         st.markdown("---")
 
         # ── Trade Log ────────────────────────────────────────────────
-        st.markdown("### 📝 Trade Log")
+        st.markdown("### Trade Log")
 
         trades_only = bt_df[bt_df["action"].isin(["BUY", "SELL"])].copy()
         if not trades_only.empty:
@@ -357,7 +357,7 @@ if "bt_results" in st.session_state:
     st.markdown("---")
 
     # ── Monthly Returns Heatmap ──────────────────────────────────────
-    st.markdown("### 📅 Monthly Returns Analysis")
+    st.markdown("### Monthly Returns Analysis")
 
     if strategy_names:
         bt_monthly = results[strategy_names[0]].copy()

@@ -72,7 +72,7 @@ st.markdown(
 st.markdown("---")
 
 # ── Model Overview ───────────────────────────────────────────────────
-st.markdown("### 📋 Model Overview")
+st.markdown("### Model Overview")
 st.markdown("")
 
 ov1, ov2, ov3 = st.columns(3)
@@ -134,7 +134,7 @@ with ov3:
 st.markdown("---")
 
 # ── Performance Metrics ──────────────────────────────────────────────
-st.markdown("### 📏 Model Performance Metrics")
+st.markdown("### Model Performance Metrics")
 st.markdown("")
 
 mc1, mc2, mc3, mc4, mc5 = st.columns(5)
@@ -168,7 +168,7 @@ with st.expander("ℹ️ What do these metrics mean?", expanded=False):
 st.markdown("---")
 
 # ── Feature Importance ───────────────────────────────────────────────
-st.markdown("### 🏆 Feature Importance")
+st.markdown("### Feature Importance")
 st.markdown("")
 
 fi_df = model.get_feature_importance()
@@ -181,9 +181,9 @@ with col_chart:
 with col_table:
     st.markdown(
         """
-        <div class="glass-card" style="padding: 1rem;">
+        <div class="glass-card" style="padding: 0rem;">
             <h4 style="font-family: 'Orbitron', sans-serif; color: #00d4ff !important;
-                       font-size: 0.85rem; margin-bottom: 0.8rem;">
+                       font-size: 0.85rem; margin-bottom: 0rem; margin-left: 1rem">
                 Top Features by Importance
             </h4>
         </div>
@@ -199,7 +199,7 @@ with col_table:
 st.markdown("---")
 
 # ── Confusion Matrix ────────────────────────────────────────────────
-st.markdown("### 🧩 Confusion Matrix")
+st.markdown("### Confusion Matrix")
 st.markdown("")
 
 if not pred_history.empty and pred_history["actual"].notna().any():
@@ -221,13 +221,13 @@ if not pred_history.empty and pred_history["actual"].notna().any():
 
         st.markdown(
             """
-            <div class="glass-card">
-                <h4 style="font-family: 'Orbitron', sans-serif; color: #00d4ff !important;
-                           font-size: 0.85rem; margin-bottom: 0.8rem;">
-                    Classification Report
-                </h4>
-            </div>
-            """,
+        <div class="glass-card" style="padding: 0rem;">
+            <h4 style="font-family: 'Orbitron', sans-serif; color: #00d4ff !important;
+                       font-size: 0.85rem; margin-bottom: 0rem; margin-left: 1rem">
+                Classification Report
+            </h4>
+        </div>
+        """,
             unsafe_allow_html=True,
         )
 
@@ -241,7 +241,7 @@ else:
 st.markdown("---")
 
 # ── Prediction Analysis ─────────────────────────────────────────────
-st.markdown("### 📊 Prediction Analysis")
+st.markdown("### Prediction Analysis")
 st.markdown("")
 
 if not pred_history.empty:
@@ -294,7 +294,7 @@ if not pred_history.empty:
 st.markdown("---")
 
 # ── ML Pipeline Explanation ──────────────────────────────────────────
-st.markdown("### 🔬 ML Pipeline Details")
+st.markdown("### ML Pipeline Details")
 st.markdown("")
 
 tab_etl, tab_model, tab_eval = st.tabs([

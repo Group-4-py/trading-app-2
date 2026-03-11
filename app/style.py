@@ -302,7 +302,19 @@ def inject_custom_css():
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s ease;
-            min-height: 180px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* Avatar row — fixed 110px so names line up below */
+        .team-card img {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            margin-bottom: 0.5rem;
         }
 
         .team-card:hover {
@@ -311,25 +323,42 @@ def inject_custom_css():
             transform: translateY(-3px);
         }
 
+        /* Name — fixed height so role lines up below */
         .team-card h4 {
             font-family: 'Orbitron', sans-serif !important;
             color: var(--accent-cyan) !important;
-            font-size: 1rem;
-            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 0.3rem 0;
+            line-height: 1.2;
         }
 
+        /* Role — fixed height so focus lines up below */
         .team-card .role {
             color: var(--accent-purple) !important;
             font-weight: 600;
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            height: 1.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* Focus — fixed height so LinkedIn button lines up below */
         .team-card .focus {
             color: var(--text-secondary) !important;
             font-size: 0.85rem;
-            margin-top: 0.5rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0.4rem;
+            line-height: 1.3;
         }
 
         .feature-box {
@@ -401,6 +430,13 @@ def inject_custom_css():
         /* ── Slider ───────────────────────────────────────── */
         .stSlider > div > div > div > div {
             background: var(--accent-cyan) !important;
+        }
+
+        /* ── Hide anchor link icons on headers ───────────── */
+        h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+        .stMarkdown h1 a, .stMarkdown h2 a, .stMarkdown h3 a,
+        .stMarkdown h4 a, .stMarkdown h5 a, .stMarkdown h6 a {
+            display: none !important;
         }
 
         /* ── Hide Streamlit branding ──────────────────────── */
