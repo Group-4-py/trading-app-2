@@ -44,7 +44,7 @@ def inject_custom_css():
 
         /* Main content area */
         .main .block-container {
-            padding-top: 2rem !important;
+            padding-top: 0rem !important;
             max-width: 1200px !important;
         }
 
@@ -273,6 +273,49 @@ def inject_custom_css():
             text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
         }
 
+        /* ── Animated Hero Background ────────────────────── */
+        @keyframes heroPulse {
+            0%   { transform: translate(-50%, -50%) scale(0.8); opacity: 0.65; }
+            50%  { transform: translate(-50%, -50%) scale(1.6); opacity: 0.165; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.65; }
+        }
+
+        .hero-bg {
+            position: relative;
+            overflow: hidden;
+            padding: 0 1rem 1rem 1rem;
+        }
+
+        /* radial cyan pulse */
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.25) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: heroPulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* radial purple pulse — offset timing */
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0.8);
+            animation: heroPulse 3s ease-in-out 1.5s infinite;
+            pointer-events: none;
+        }
+
         .hero-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 2.8rem;
@@ -437,6 +480,11 @@ def inject_custom_css():
         .stMarkdown h1 a, .stMarkdown h2 a, .stMarkdown h3 a,
         .stMarkdown h4 a, .stMarkdown h5 a, .stMarkdown h6 a {
             display: none !important;
+        }
+
+        /* ── Top decoration bar ───────────────────────────── */
+        [data-testid="stDecoration"] {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)) !important;
         }
 
         /* ── Hide Streamlit branding ──────────────────────── */

@@ -7,11 +7,11 @@ Central place for all constants, tickers, and settings.
 # Drop company logos into app/assets/logos/ with the matching filename (e.g. aapl.png).
 # Supported formats: .png, .jpg, .jpeg, .svg, .webp
 TICKERS = {
-    "AAPL": {"name": "Apple Inc.", "sector": "Technology", "icon": "", "image": "assets/logos/aapl.png", "logo_size": 56, "header_image": "assets/logos/header/aapl.png"},
-    "MSFT": {"name": "Microsoft Corp.", "sector": "Technology", "icon": "", "image": "assets/logos/msft.png", "logo_size": 56, "header_image": "assets/logos/header/msft.png"},
-    "GOOGL": {"name": "Alphabet Inc.", "sector": "Technology", "icon": "", "image": "assets/logos/googl.png", "logo_size": 56, "header_image": "assets/logos/header/googl.png"},
-    "AMZN": {"name": "Amazon.com Inc.", "sector": "Consumer Cyclical", "icon": "", "image": "assets/logos/amzn.png", "logo_size": 56, "header_image": "assets/logos/header/amzn.png"},
-    "NVDA": {"name": "NVIDIA Corp.", "sector": "Technology", "icon": "", "image": "assets/logos/nvda.png", "logo_size": 56, "header_image": "assets/logos/header/nvda.png"},
+    "AAPL": {"name": "Apple Inc.", "sector": "Technology", "icon": "", "image": "assets/logos/aapl.png", "logo_size": 56, "header_image": "assets/logos/header/aapl.png", "url": "https://www.apple.com"},
+    "MSFT": {"name": "Microsoft Corp.", "sector": "Technology", "icon": "", "image": "assets/logos/msft.png", "logo_size": 56, "header_image": "assets/logos/header/msft.png", "url": "https://www.microsoft.com"},
+    "GOOGL": {"name": "Alphabet Inc.", "sector": "Technology", "icon": "", "image": "assets/logos/googl.png", "logo_size": 56, "header_image": "assets/logos/header/googl.png", "url": "https://abc.xyz"},
+    "AMZN": {"name": "Amazon.com Inc.", "sector": "Consumer Cyclical", "icon": "", "image": "assets/logos/amzn.png", "logo_size": 56, "header_image": "assets/logos/header/amzn.png", "url": "https://www.amazon.com"},
+    "NVDA": {"name": "NVIDIA Corp.", "sector": "Technology", "icon": "", "image": "assets/logos/nvda.png", "logo_size": 56, "header_image": "assets/logos/header/nvda.png", "url": "https://www.nvidia.com"},
 }
 
 TICKER_LIST = list(TICKERS.keys())

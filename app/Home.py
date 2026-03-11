@@ -24,7 +24,7 @@ inject_custom_css()
 
 # ── Sidebar ──────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### ⚡ AutoTrader")
+    st.markdown("### AutoTrader")
     st.markdown("---")
     st.markdown(
         """
@@ -71,7 +71,7 @@ if os.path.isfile(_logo_abs):
 
 st.markdown(
     f"""
-    <div style="text-align: center; padding: 0rem 0 0.25rem 0;">
+    <div class="hero-bg" style="text-align: center;">
         {_logo_html}
         <div class="hero-title">AUTOTRADER</div>
         <div class="hero-subtitle">AI-Powered Daily Trading System</div>
@@ -196,14 +196,17 @@ ticker_cols = st.columns(len(TICKERS))
 for col, (ticker, info) in zip(ticker_cols, TICKERS.items()):
     with col:
         logo = _ticker_logo(info.get("image", ""), info["icon"], info.get("logo_size", 56))
+        url = info.get("url", "#")
         st.markdown(
             f"""
-            <div class="feature-box">
-                {logo}
-                <h5>{ticker}</h5>
-                <p style="color: #94a3b8 !important; font-size: 0.8rem; margin: 0;">{info['name']}</p>
-                <p style="color: #a855f7 !important; font-size: 0.7rem; margin: 0;">{info['sector']}</p>
-            </div>
+            <a href="{url}" target="_blank" style="text-decoration: none;">
+                <div class="feature-box">
+                    {logo}
+                    <h5>{ticker}</h5>
+                    <p style="color: #94a3b8 !important; font-size: 0.8rem; margin: 0;">{info['name']}</p>
+                    <p style="color: #a855f7 !important; font-size: 0.7rem; margin: 0;">{info['sector']}</p>
+                </div>
+            </a>
             """,
             unsafe_allow_html=True,
         )
@@ -218,7 +221,7 @@ st.markdown("")
 step_cols = st.columns(4)
 steps = [
     ("1", "📥", "Data Ingestion", "Fetch real-time prices from SimFin via our PySimFin API wrapper"),
-    ("2", "🔧", "ETL Processing", "Clean, normalize, and compute 20+ technical features"),
+    ("2", "🔧", "ETL Process", "Clean, normalize, and compute 20+ technical features"),
     ("3", "🤖", "ML Prediction", "Classification model predicts next-day price direction"),
     ("4", "📊", "Signal & Action", "Generate BUY / SELL / HOLD signals with confidence scores"),
 ]
