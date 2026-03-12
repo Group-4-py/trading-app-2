@@ -15,6 +15,11 @@ from utils.config import MODEL_PATH, MODEL_FEATURES, TICKER_DUMMIES
 
 logger = logging.getLogger(__name__)
 
+TICKER_ALIASES = {
+    "GOOG": "GOOGL",
+    "GOOGL": "GOOG",
+}
+
 
 class ModelWrapper:
     """
@@ -28,19 +33,23 @@ class ModelWrapper:
         self.classes_ = getattr(model, "classes_", np.array([0, 1]))
         self.is_dummy = False
         self.model_path = os.path.join(MODEL_PATH, "all_tickers_model.joblib")
+        self.feature_names_in_ = _get_expected_feature_names(model)
+        self.ticker_dummy_columns = [
+            name for name in self.feature_names_in_ if name.startswith("ticker_")
+        ] or list(TICKER_DUMMIES)
 
     # ── Prediction passthrough ───────────────────────────────────────
     def predict(self, X: pd.DataFrame) -> np.ndarray:
-        X_enc = _add_ticker_columns(X, self._ticker)
+        X_enc = _prepare_model_input(X, self.feature_names_in_, self.ticker_dummy_columns, self._ticker)
         return self._model.predict(X_enc)
 
     def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
-        X_enc = _add_ticker_columns(X, self._ticker)
+        X_enc = _prepare_model_input(X, self.feature_names_in_, self.ticker_dummy_columns, self._ticker)
         return self._model.predict_proba(X_enc)
 
     # ── Helpers for Model Insights page ──────────────────────────────
     def get_feature_importance(self) -> pd.DataFrame:
-        all_features = MODEL_FEATURES + TICKER_DUMMIES
+        all_features = self.feature_names_in_ or (MODEL_FEATURES + TICKER_DUMMIES)
         # Support both bare models and Pipeline objects
         clf = self._model
         if hasattr(clf, "named_steps"):
@@ -145,6 +154,54 @@ def _add_ticker_columns(X: pd.DataFrame, ticker: str = None) -> pd.DataFrame:
         expected_ticker = col.replace("ticker_", "")
         X[col] = 1.0 if ticker and ticker.upper() == expected_ticker else 0.0
     return X
+
+
+def _get_expected_feature_names(model) -> list[str]:
+    """Return the exact feature names the persisted model expects, when available."""
+    names = getattr(model, "feature_names_in_", None)
+    if names is None and hasattr(model, "named_steps"):
+        clf = model.named_steps.get("clf")
+        names = getattr(clf, "feature_names_in_", None)
+    if names is None:
+        return list(MODEL_FEATURES) + list(TICKER_DUMMIES)
+    return list(names)
+
+
+def _resolve_ticker_column(ticker: str, ticker_columns: list[str]) -> str | None:
+    """Resolve the model's expected one-hot column for the requested ticker."""
+    if not ticker:
+        return None
+
+    candidates = [ticker.upper()]
+    alias = TICKER_ALIASES.get(ticker.upper())
+    if alias:
+        candidates.append(alias)
+
+    for candidate in candidates:
+        col = f"ticker_{candidate}"
+        if col in ticker_columns:
+            return col
+    return None
+
+
+def _prepare_model_input(
+    X: pd.DataFrame,
+    expected_feature_names: list[str],
+    ticker_columns: list[str],
+    ticker: str = None,
+) -> pd.DataFrame:
+    """Align app features to the exact schema expected by the persisted model."""
+    X = X.copy()
+    selected_ticker_col = _resolve_ticker_column(ticker, ticker_columns)
+
+    for col in ticker_columns:
+        X[col] = 1.0 if col == selected_ticker_col else 0.0
+
+    for col in expected_feature_names:
+        if col not in X.columns:
+            X[col] = 0.0
+
+    return X[expected_feature_names]
 
 
 def load_model(ticker: str = None):

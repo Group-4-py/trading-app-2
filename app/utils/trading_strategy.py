@@ -27,23 +27,25 @@ def strategy_buy_and_hold(
     prices: np.ndarray,
     initial_capital: float = INITIAL_CAPITAL,
     transaction_cost: float = TRANSACTION_COST,
-    n_tranches: int = 4,
+    n_buy_ins: int = 12,
 ) -> pd.DataFrame:
     """
-    Buy-and-Hold Strategy (tranche-based):
-      - Capital is split into n_tranches equal portions
-      - Each time the model signal flips from DOWN→UP, deploy one tranche
+    Buy-and-Hold Strategy (simple DCA):
+      - Look for all UP prediction days across the full backtest
+      - Spread capital across up to n_buy_ins equal buy-ins
+      - Execute those buy-ins on evenly spaced bullish entry points
       - Never sell — accumulates shares over time
 
-    This creates several distinct BUY moments while remaining purely passive
-    (no exits). Each buy-in is driven by the model turning bullish again.
+    This keeps the strategy passive while avoiding only a handful of early
+    buys. The result is a simple dollar-cost-averaging style accumulation
+    plan with more than 4 buy-ins by default.
 
     Args:
         predictions: Binary model predictions (0=DOWN, 1=UP).
         prices: Stock prices per step.
         initial_capital: Starting capital.
         transaction_cost: Per-trade cost as fraction of value.
-        n_tranches: Number of equal buy-ins to spread capital across.
+        n_buy_ins: Target number of equal buy-ins to spread capital across.
 
     Returns:
         DataFrame with portfolio simulation results.
@@ -51,28 +53,37 @@ def strategy_buy_and_hold(
     n = len(predictions)
     cash = initial_capital
     shares = 0
-    tranche_size = initial_capital / n_tranches
-    tranches_deployed = 0
-    prev_pred = 0  # treat start as DOWN so first UP flip triggers a buy
     records = []
+
+    up_steps = np.flatnonzero(np.asarray(predictions).astype(int) == 1)
+    if len(up_steps) > 0:
+        planned_buy_count = min(max(n_buy_ins, 1), len(up_steps))
+        dca_positions = np.linspace(0, len(up_steps) - 1, num=planned_buy_count, dtype=int)
+        buy_steps = set(up_steps[np.unique(dca_positions)].tolist())
+    else:
+        planned_buy_count = 0
+        buy_steps = set()
+
+    tranche_size = initial_capital / planned_buy_count if planned_buy_count > 0 else 0.0
+    buys_executed = 0
 
     for i in range(n):
         price = prices[i]
         pred = int(predictions[i])
         action = "HOLD"
 
-        # Buy one tranche on each DOWN→UP flip, as long as tranches remain
-        if pred == 1 and prev_pred == 0 and tranches_deployed < n_tranches and cash >= price:
-            deploy = min(tranche_size, cash)
+        if i in buy_steps and cash >= price:
+            # Use the remaining cash on the final DCA entry to avoid leaving
+            # a small uninvested balance stranded by transaction costs.
+            deploy = cash if buys_executed == planned_buy_count - 1 else min(tranche_size, cash)
             affordable = int(deploy / (price * (1 + transaction_cost)))
             if affordable > 0:
                 cost = affordable * price * (1 + transaction_cost)
                 cash -= cost
                 shares += affordable
-                tranches_deployed += 1
+                buys_executed += 1
                 action = "BUY"
 
-        prev_pred = pred
         portfolio_value = cash + shares * price
         records.append({
             "step": i,

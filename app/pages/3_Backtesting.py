@@ -114,9 +114,10 @@ with s1:
                 📈 Buy & Hold (ML)
             </h4>
             <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
-                <span style="color: #00ff88;">▲ DOWN→UP signal flip</span> → Buy 1 tranche<br>
-                Capital split across 4 buy-ins. No selling.<br><br>
-                <em>Several buys, never sells. Accumulates on bullish flips.</em>
+                <span style="color: #00ff88;">▲ Predict UP</span> → buy-in<br>
+                Capital spread across up to 12 bullish entry points.<br>
+                Never sells.<br><br>
+                <em>Gradual accumulation across period.</em>
             </p>
         </div>
         """,
@@ -303,8 +304,8 @@ if "bt_results" in st.session_state:
         with st.expander("Strategy Parameters Used"):
             if selected_strategy == "Buy & Hold (ML)":
                 sp1, sp2, sp3 = st.columns(3)
-                sp1.metric("Entry Signal", "DOWN → UP flip")
-                sp2.metric("Tranches", "4 equal buy-ins, no sells")
+                sp1.metric("Entry Signal", "Bullish DCA entries")
+                sp2.metric("Buy-Ins", "Up to 12 equal allocations")
                 sp3.metric("Txn Cost", f"{transaction_cost_bps} bps per buy")
             elif selected_strategy == "Buy & Sell (ML)":
                 sp1, sp2, sp3, sp4, sp5 = st.columns(5)
