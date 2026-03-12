@@ -28,11 +28,7 @@ def split_features_target(df: pd.DataFrame):
     """
     Separate features (X) and target (y).
     Include ticker as a categorical feature via one-hot encoding.
-    Uses the engineered features that match Features-used.csv.
     """
-    df = df.copy()
-
-    # One‑hot encode ticker
     df = pd.get_dummies(df, columns=["ticker"], drop_first=True)
 
     feature_cols = [
@@ -59,12 +55,8 @@ def split_features_target(df: pd.DataFrame):
         "atr_14",
     ] + [c for c in df.columns if c.startswith("ticker_")]
 
-    # Keep only columns that actually exist (defensive)
-    feature_cols = [c for c in feature_cols if c in df.columns]
-
     X = df[feature_cols]
-    y = df["target"]      # from etl_utils.add_target_column
-
+    y = df["target"]
     return X, y, feature_cols
 
 
@@ -113,5 +105,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

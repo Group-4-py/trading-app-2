@@ -67,12 +67,12 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = df.copy()
 
-    # Returns
+    # Calculate short-, medium-, and long-term percentage returns
     df["return_1d"] = df["close"].pct_change()
     df["return_5d"] = df["close"].pct_change(5)
     df["return_10d"] = df["close"].pct_change(10)
 
-    # Simple moving averages
+    # Compute moving averages to identify general price trends across different time horizons
     df["sma_5"] = df["close"].rolling(5).mean()
     df["sma_10"] = df["close"].rolling(10).mean()
     df["sma_20"] = df["close"].rolling(20).mean()
@@ -131,6 +131,7 @@ def add_bollinger_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = df.copy()
 
+    # Calculate Bollinger Bands bounds to measure price volatility and potential overbought/oversold levels
     sma_20 = df["close"].rolling(20).mean()
     std_20 = df["close"].rolling(20).std()
 
@@ -145,6 +146,7 @@ def add_volume_features(df: pd.DataFrame) -> pd.DataFrame:
     """Add volume moving average and ratio."""
     df = df.copy()
 
+    # Analyze trading volume spikes compared to the recent average
     df["volume_sma_10"] = df["volume"].rolling(10).mean()
     df["volume_ratio"] = df["volume"] / df["volume_sma_10"]
 
@@ -182,6 +184,7 @@ def add_all_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Apply the full feature-engineering pipeline.
     """
+    # Sequentially build out the target and all technical indicators needed for ML modeling
     df = add_basic_features(df)
     df = add_volatility_features(df)
     df = add_trend_momentum_features(df)
@@ -189,6 +192,7 @@ def add_all_features(df: pd.DataFrame) -> pd.DataFrame:
     df = add_volume_features(df)
     df = add_atr(df)
     df = add_target_column(df)
+    
     return df
 
 
@@ -246,7 +250,25 @@ def select_feature_columns(df: pd.DataFrame, ticker: Optional[str] = None) -> pd
     return out
 
 
-# ---------- end-to-end ETL for one ticker ----------
+def run_etl_from_dataframe(
+    ticker: str,
+    prices_df: pd.DataFrame,
+    output_path: Path,
+) -> None:
+    """
+    Run sequence of ETL steps on an already loaded SimFin DataFrame.
+    """
+    # 1. Extract and standardize column structures just for the target stock
+    prices_ticker = filter_ticker(prices_df, ticker)
+    
+    # 2. Apply the full sequence of mathematical transforms to create predictors
+    prices_feat = add_all_features(prices_ticker)
+    
+    # 3. Filter down to the final schema required for downstream machine learning
+    features = select_feature_columns(prices_feat, ticker=ticker)
+    
+    # 4. Save the prepared dataset to disk in compressed parquet format
+    save_features(features, output_path)
 
 def run_etl_for_ticker(
     ticker: str,
@@ -257,8 +279,10 @@ def run_etl_for_ticker(
     Full ETL for a single ticker:
     load raw CSV -> filter -> feature engineering -> select cols -> save.
     """
+    # 1. Load historical data block into memory
     prices = load_share_prices(share_prices_path)
-    prices_ticker = filter_ticker(prices, ticker)
-    prices_feat = add_all_features(prices_ticker)
-    features = select_feature_columns(prices_feat, ticker=ticker)
-    save_features(features, output_path)
+    
+    # Delegate to the DataFrame-based function
+    run_etl_from_dataframe(ticker, prices, output_path)
+
+
