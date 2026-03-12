@@ -1,12 +1,11 @@
-# etl_share_prices.py
-
 from pathlib import Path
 import argparse
+
 from etl_utils import run_etl_for_ticker
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Run the shared ETL pipeline for one ticker.")
     parser.add_argument("--ticker", required=True)
     parser.add_argument(
         "--input",

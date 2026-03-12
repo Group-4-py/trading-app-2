@@ -1,78 +1,71 @@
-# etl_utils.py
+"""Helpers for running the shared ETL pipeline from CLI scripts."""
 
 from pathlib import Path
+import sys
+
 import pandas as pd
 
 
-def load_share_prices(path: Path) -> pd.DataFrame:
-    df = pd.read_csv(
-        path,
-        sep=";",        # SimFin bulk files use ';'
-        engine="python"
-    )
-    return df
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+APP_DIR = PROJECT_ROOT / "app"
+
+if str(APP_DIR) not in sys.path:
+    sys.path.insert(0, str(APP_DIR))
+
+from utils.config import TICKER_LIST
+from utils.etl import run_etl
+
+PRICE_COLUMNS = ["Ticker", "Date", "Open", "High", "Low", "Close", "Adj. Close", "Volume"]
+
+
+def load_share_prices(path: Path, tickers: list[str] | None = None) -> pd.DataFrame:
+    """Load only the requested share-price rows from the SimFin bulk file."""
+    source_tickers = set(tickers) if tickers else None
+    chunks = []
+    for chunk in pd.read_csv(path, sep=";", usecols=PRICE_COLUMNS, chunksize=250_000):
+        if source_tickers:
+            chunk = chunk[chunk["Ticker"].isin(source_tickers)]
+        if not chunk.empty:
+            chunks.append(chunk)
+    if not chunks:
+        return pd.DataFrame(columns=PRICE_COLUMNS)
+    return pd.concat(chunks, ignore_index=True)
 
 
 def filter_ticker(df: pd.DataFrame, ticker: str) -> pd.DataFrame:
+    """Return one ticker sorted chronologically."""
     out = df[df["Ticker"] == ticker].copy()
     out["Date"] = pd.to_datetime(out["Date"])
-    out = out.sort_values("Date")
-    return out
-
-
-def add_technical_features(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-    df["return_1d"] = df["Close"].pct_change()
-    df["ma_5"] = df["Close"].rolling(window=5).mean()
-    df["ma_10"] = df["Close"].rolling(window=10).mean()
-    df["ma_ratio_5_10"] = df["ma_5"] / df["ma_10"]
-    return df
-
-
-def add_target_column(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-    df["close_next_day"] = df["Close"].shift(-1)
-    df["return_next_day"] = (df["close_next_day"] - df["Close"]) / df["Close"]
-    df["target_up"] = (df["return_next_day"] > 0).astype(int)
-    return df
-
-
-def select_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
-    cols = [
-        "Ticker",
-        "Date",
-        "Close",
-        "return_1d",
-        "ma_5",
-        "ma_10",
-        "ma_ratio_5_10",
-        "return_next_day",
-        "target_up",
-    ]
-    out = df[cols].rename(
-        columns={
-            "Ticker": "ticker",
-            "Date": "date",
-            "Close": "close",
-        }
-    )
-    out = out.dropna().reset_index(drop=True)
-    return out
-
-
-def save_features(df: pd.DataFrame, output_path: Path) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(output_path, index=False)
+    return out.sort_values("Date").reset_index(drop=True)
 
 
 def run_etl_for_ticker(
     ticker: str,
     share_prices_path: Path,
     output_path: Path,
-) -> None:
-    prices = load_share_prices(share_prices_path)
+) -> pd.DataFrame:
+    """Run the exact same ETL pipeline used by the app and model."""
+    prices = load_share_prices(share_prices_path, [ticker])
+    return run_etl_for_ticker_from_df(ticker, prices, output_path)
+
+
+def run_etl_for_ticker_from_df(
+    ticker: str,
+    prices: pd.DataFrame,
+    output_path: Path,
+) -> pd.DataFrame:
+    """Run the shared ETL for one ticker from an already loaded price frame."""
     prices_ticker = filter_ticker(prices, ticker)
-    prices_feat = add_technical_features(prices_ticker)
-    prices_labeled = add_target_column(prices_feat)
-    features = select_feature_columns(prices_labeled)
-    save_features(features, output_path)
+    features = run_etl(prices_ticker, include_target=True)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    features.to_parquet(output_path, index=False)
+    return features
+
+
+__all__ = [
+    "TICKER_LIST",
+    "load_share_prices",
+    "filter_ticker",
+    "run_etl_for_ticker",
+    "run_etl_for_ticker_from_df",
+]

@@ -39,13 +39,14 @@ with st.sidebar:
     )
     st.markdown("---")
 
-    # API Key input (persists via session state)
+    # API Key input — store in a persistent key so other pages can read it
     api_key = st.text_input(
         "🔑 SimFin API Key",
+        value=st.session_state.get("api_key_stored", ""),
         type="password",
         help="Enter your SimFin API key to fetch real market data. Leave empty for demo mode.",
-        key="simfin_api_key",
     )
+    st.session_state["api_key_stored"] = api_key
 
     if api_key:
         st.success("API key configured ✓")

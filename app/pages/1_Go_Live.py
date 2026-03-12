@@ -76,9 +76,9 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    api_key = st.session_state.get("simfin_api_key", "")
+    api_key = st.session_state.get("api_key_stored", "")
     if api_key:
-        st.success("Live data from SimFin ✓")
+        st.success("Live data from SimFin")
     else:
         st.info("Demo mode — synthetic data")
 

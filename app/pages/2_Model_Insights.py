@@ -13,7 +13,7 @@ st.set_page_config(page_title="Model Insights | AutoTrader", page_icon="🧠", l
 
 from utils.style import inject_custom_css
 from utils.config import TICKERS, TICKER_LIST, MODEL_FEATURES
-from utils.model import load_model
+from utils.model import load_model, calculate_model_metrics
 from utils.data_helpers import load_processed_data, get_prediction_history
 from utils.charts import (
     feature_importance_chart, confusion_matrix_chart,
@@ -48,13 +48,23 @@ with st.sidebar:
         )
 
     st.markdown("---")
-    api_key = st.session_state.get("simfin_api_key", "")
+    api_key = st.session_state.get("api_key_stored", "")
 
 # ── Load Model & Data ────────────────────────────────────────────────
 model = load_model(selected_ticker)
-metrics = model.get_model_metrics()
 processed_df = load_processed_data(selected_ticker, days=504, api_key=api_key)
 pred_history = get_prediction_history(selected_ticker, model, n_days=120, api_key=api_key)
+
+available_features = [f for f in MODEL_FEATURES if f in processed_df.columns]
+metric_source_df = processed_df.dropna(subset=available_features + ["target"]).copy() if available_features else pd.DataFrame()
+if not metric_source_df.empty:
+    metrics = calculate_model_metrics(
+        model,
+        metric_source_df[available_features],
+        metric_source_df["target"],
+    )
+else:
+    metrics = model.get_model_metrics()
 
 # ── Page Header ──────────────────────────────────────────────────────
 st.markdown(
@@ -114,6 +124,8 @@ with ov2:
     )
 
 with ov3:
+    train_samples = "N/A" if metrics["train_samples"] is None else f"{metrics['train_samples']:,}"
+    test_samples = "N/A" if metrics["test_samples"] is None else f"{metrics['test_samples']:,}"
     st.markdown(
         f"""
         <div class="glass-card">
@@ -121,10 +133,10 @@ with ov3:
                 📊 Dataset Info
             </h4>
             <p style="color: #94a3b8 !important; line-height: 1.7; font-size: 0.9rem;">
-                <strong style="color: #e2e8f0;">Training:</strong> {metrics['train_samples']:,} samples<br>
-                <strong style="color: #e2e8f0;">Testing:</strong> {metrics['test_samples']:,} samples<br>
+                <strong style="color: #e2e8f0;">Training:</strong> {train_samples} samples<br>
+                <strong style="color: #e2e8f0;">Testing:</strong> {test_samples} samples<br>
                 <strong style="color: #e2e8f0;">Features:</strong> {len(MODEL_FEATURES)}<br>
-                <strong style="color: #e2e8f0;">Model:</strong> {metrics['model_type'][:25]}...
+                <strong style="color: #e2e8f0;">Model:</strong> StandardScalar + LogitRegression
             </p>
         </div>
         """,
@@ -138,11 +150,11 @@ st.markdown("### Model Performance Metrics")
 st.markdown("")
 
 mc1, mc2, mc3, mc4, mc5 = st.columns(5)
-mc1.metric("Accuracy", f"{metrics['accuracy']:.1%}")
-mc2.metric("Precision", f"{metrics['precision']:.1%}")
-mc3.metric("Recall", f"{metrics['recall']:.1%}")
-mc4.metric("F1 Score", f"{metrics['f1_score']:.1%}")
-mc5.metric("AUC-ROC", f"{metrics['auc_roc']:.3f}")
+mc1.metric("Accuracy", "N/A" if pd.isna(metrics["accuracy"]) else f"{metrics['accuracy']:.1%}")
+mc2.metric("Precision", "N/A" if pd.isna(metrics["precision"]) else f"{metrics['precision']:.1%}")
+mc3.metric("Recall", "N/A" if pd.isna(metrics["recall"]) else f"{metrics['recall']:.1%}")
+mc4.metric("F1 Score", "N/A" if pd.isna(metrics["f1_score"]) else f"{metrics['f1_score']:.1%}")
+mc5.metric("AUC-ROC", "N/A" if pd.isna(metrics["auc_roc"]) else f"{metrics['auc_roc']:.3f}")
 
 st.markdown("")
 
@@ -334,9 +346,9 @@ with tab_model:
 
         **Model Type:** Binary Classification (UP / DOWN)
 
-        **Current Status:** The model is designed to be plug-and-play. During development,
-        a heuristic-based DummyClassifier simulates predictions. Once Part 1 is complete,
-        the trained model (exported as `.pkl` via `joblib`) is loaded automatically.
+        **Current Status:** The app loads the shared trained model from
+        `ml/model/all_tickers_model.joblib`. If that file is missing, it falls back to a
+        heuristic DummyClassifier.
 
         **Recommended approaches (Part 1):**
         - **Logistic Regression** — Simple baseline, fast training
@@ -348,10 +360,12 @@ with tab_model:
 
         **Output:** Binary prediction (0 = DOWN, 1 = UP) + class probabilities
 
-        **How to integrate your model:**
-        1. Train your model in Part 1 and export it: `joblib.dump(model, "models/model_aapl.pkl")`
-        2. Place the `.pkl` file in the `models/` directory
-        3. The app will automatically detect and load it — no code changes needed!
+        **Deployment Path:** `ml/model/all_tickers_model.joblib`
+
+        **How the app uses it:**
+        1. `utils.model.load_model()` loads `all_tickers_model.joblib`
+        2. The selected ticker is encoded through ticker dummy columns
+        3. All app pages use that same loaded model for inference
         """
     )
 
@@ -360,7 +374,7 @@ with tab_eval:
         """
         #### Evaluation Methodology
 
-        **Train-Test Split:** Temporal split (e.g., 75% train / 25% test) to avoid
+        **Train-Test Split:** Temporal split using 80% train / 20% test to avoid
         look-ahead bias. We never shuffle time-series data randomly.
 
         **Metrics Used:**
@@ -374,14 +388,8 @@ with tab_eval:
         respect temporal ordering.
 
         **Important Note:** Stock prediction is inherently noisy. Even models with
-        ~55% accuracy can be profitable with proper risk management. The goal is not
+        ~50% accuracy can be profitable with proper risk management. The goal is not
         perfect prediction but consistent edge over random.
         """
     )
 
-# ── Footer ───────────────────────────────────────────────────────────
-st.markdown("")
-st.caption(
-    "Model metrics shown are from evaluation on the test set. "
-    "Replace the DummyClassifier with your Part 1 model for real metrics."
-)

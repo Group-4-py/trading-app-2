@@ -60,19 +60,13 @@ with st.sidebar:
         step=10_000,
     )
 
-    profit_target = st.slider(
-        "Profit Target (Buy & Hold)",
-        min_value=0.01, max_value=0.50, value=0.10, step=0.01,
-        format="%.0f%%",
-        help="Sell position when unrealized profit reaches this percentage.",
+    transaction_cost_bps = st.slider(
+        "Transaction Cost (bps)",
+        min_value=0, max_value=100, value=10, step=5,
+        format="%d bps",
+        help="Cost per transaction in basis points (10 bps = 0.1%).",
     )
-
-    transaction_cost = st.slider(
-        "Transaction Cost",
-        min_value=0.0, max_value=0.01, value=0.001, step=0.0005,
-        format="%.2f%%",
-        help="Cost per transaction as a fraction of trade value.",
-    )
+    transaction_cost = transaction_cost_bps / 10_000.0
 
     backtest_days = st.slider(
         "Backtest Period (trading days)",
@@ -89,7 +83,7 @@ with st.sidebar:
     st.markdown("---")
     run_backtest = st.button("🚀 Run Backtest", use_container_width=True)
 
-    api_key = st.session_state.get("simfin_api_key", "")
+    api_key = st.session_state.get("api_key_stored", "")
 
 # ── Page Header ──────────────────────────────────────────────────────
 st.markdown(
@@ -120,10 +114,9 @@ with s1:
                 📈 Buy & Hold (ML)
             </h4>
             <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
-                <span style="color: #00ff88;">▲ Predict UP</span> → Buy shares<br>
-                <span style="color: #ff3366;">▼ Predict DOWN</span> → Hold position<br>
-                <span style="color: #fbbf24;">★ Profit Target</span> → Sell all shares<br><br>
-                <em>Conservative approach: only sells at profit target.</em>
+                <span style="color: #00ff88;">▲ DOWN→UP signal flip</span> → Buy 1 tranche<br>
+                Capital split across 4 buy-ins. No selling.<br><br>
+                <em>Several buys, never sells. Accumulates on bullish flips.</em>
             </p>
         </div>
         """,
@@ -138,9 +131,10 @@ with s2:
                 🔄 Buy & Sell (ML)
             </h4>
             <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
-                <span style="color: #00ff88;">▲ Predict UP</span> → Buy shares<br>
-                <span style="color: #ff3366;">▼ Predict DOWN</span> → Sell all shares<br><br>
-                <em>Active approach: trades on every signal from the model.</em>
+                <span style="color: #00ff88;">▲ P(UP) ≥ 50%</span> → Buy shares<br>
+                <span style="color: #ff3366;">▼ P(UP) &lt; 50%</span> → Sell shares<br>
+                <span style="color: #fbbf24;">⏱ Force sell after 3 days</span> → Rotate<br><br>
+                <em>More trades; sells on every bearish signal.</em>
             </p>
         </div>
         """,
@@ -167,8 +161,16 @@ with s3:
 st.markdown("---")
 
 # ── Run Backtest ─────────────────────────────────────────────────────
-# Auto-run on first load OR when button clicked
-if run_backtest or "bt_results" not in st.session_state:
+# Fingerprint current params — re-run whenever any parameter changes
+_bt_params = (selected_ticker, backtest_days, initial_capital,
+              transaction_cost, run_bah, run_bas, run_benchmark)
+_needs_rerun = (
+    run_backtest
+    or "bt_results" not in st.session_state
+    or st.session_state.get("bt_params") != _bt_params
+)
+
+if _needs_rerun:
     with st.spinner("Running backtest simulation..."):
         # Load data & model
         processed_df = load_processed_data(selected_ticker, days=backtest_days, api_key=api_key)
@@ -178,10 +180,11 @@ if run_backtest or "bt_results" not in st.session_state:
             st.error("Not enough data to run backtest. Try increasing the backtest period.")
             st.stop()
 
-        # Generate predictions
+        # Generate predictions and probabilities
         avail_features = [f for f in MODEL_FEATURES if f in processed_df.columns]
         X = processed_df[avail_features]
         predictions = model.predict(X)
+        probabilities = model.predict_proba(X)[:, 1]  # P(UP)
         prices = processed_df["price"].values
         dates = processed_df["date"]
 
@@ -190,14 +193,16 @@ if run_backtest or "bt_results" not in st.session_state:
 
         if run_bah:
             bt_bah = strategy_buy_and_hold(
-                predictions, prices, initial_capital, profit_target, transaction_cost
+                predictions, prices, initial_capital,
+                transaction_cost=transaction_cost,
             )
             results["Buy & Hold (ML)"] = bt_bah
             metrics_dict["Buy & Hold (ML)"] = compute_strategy_metrics(bt_bah, initial_capital)
 
         if run_bas:
             bt_bas = strategy_buy_and_sell(
-                predictions, prices, initial_capital, transaction_cost
+                probabilities, prices, initial_capital,
+                transaction_cost=transaction_cost,
             )
             results["Buy & Sell (ML)"] = bt_bas
             metrics_dict["Buy & Sell (ML)"] = compute_strategy_metrics(bt_bas, initial_capital)
@@ -214,6 +219,7 @@ if run_backtest or "bt_results" not in st.session_state:
         st.session_state["bt_dates"] = dates
         st.session_state["bt_predictions"] = predictions
         st.session_state["bt_prices"] = prices
+        st.session_state["bt_params"] = _bt_params
 
 # ── Load cached results ──────────────────────────────────────────────
 if "bt_results" in st.session_state:
@@ -290,6 +296,23 @@ if "bt_results" in st.session_state:
         dm4.metric("Max Drawdown", f"{sm['max_drawdown']:.2%}")
         dm5.metric("Win Rate", f"{sm['win_rate']:.1%}" if sm['total_trades'] > 0 else "N/A")
         dm6.metric("Trades", sm["total_trades"])
+
+        st.markdown("")
+
+        # Strategy parameters used
+        with st.expander("Strategy Parameters Used"):
+            if selected_strategy == "Buy & Hold (ML)":
+                sp1, sp2, sp3 = st.columns(3)
+                sp1.metric("Entry Signal", "DOWN → UP flip")
+                sp2.metric("Tranches", "4 equal buy-ins, no sells")
+                sp3.metric("Txn Cost", f"{transaction_cost_bps} bps per buy")
+            elif selected_strategy == "Buy & Sell (ML)":
+                sp1, sp2, sp3, sp4, sp5 = st.columns(5)
+                sp1.metric("Buy Threshold", "P(UP) ≥ 50%")
+                sp2.metric("Sell Threshold", "P(UP) < 50%")
+                sp3.metric("Max Hold Days", "3")
+                sp4.metric("Stop-Loss", "2%")
+                sp5.metric("Txn Cost", f"{transaction_cost_bps} bps")
 
         st.markdown("")
 
