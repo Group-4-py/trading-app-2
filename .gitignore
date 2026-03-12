@@ -1,7 +1,37 @@
+# Python caches
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+
+# OS / editor files
 .DS_Store
+.vscode/
+.idea/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Local environment / secrets
 .env
-*.pkl
-models/
+.env.*
+.venv/
+venv/
+.python-version
+.streamlit/secrets.toml
+app/.streamlit/secrets.toml
+
+# Local caches / logs
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# Local-only reference files
+GroupAssignment_Instructions.ipynb
+
+# Large local training data that should not be committed
+data/raw/us-shareprices-daily.csv
+
+# Stale local artifact from the old ticker naming
+data/processed/GOOGL.parquet
