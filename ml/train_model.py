@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 
 
-TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "META"]
+TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA"]
 
 
 def load_all_processed_data(processed_dir: Path) -> pd.DataFrame:
