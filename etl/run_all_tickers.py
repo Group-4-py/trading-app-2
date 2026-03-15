@@ -4,7 +4,7 @@ from pathlib import Path
 from tqdm import tqdm
 from etl_utils import load_share_prices, run_etl_from_dataframe
 
-TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "META"]
+TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA"]
 
 
 def main():
