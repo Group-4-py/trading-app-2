@@ -139,7 +139,6 @@ with col_b:
                 <li><strong style="color: #fbbf24;">ETL Pipeline</strong> — Same pipeline re-runs on live data</li>
                 <li><strong style="color: #fbbf24;">Go Live Dashboard</strong> — Interactive predictions & charts</li>
                 <li><strong style="color: #fbbf24;">Strategy Engine</strong> — Backtesting & strategy simulation</li>
-                <li><strong style="color: #fbbf24;">Cloud Deployment</strong> — Streamlit Cloud for public access</li>
             </ul>
         </div>
         """,

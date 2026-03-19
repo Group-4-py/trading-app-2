@@ -117,7 +117,7 @@ with s1:
                         Buy on a <span style="color: #00ff88;">▲ UP prediction</span>.<br>
                         Wait 1 trading week before the next possible buy.<br>
                         Never sells during the backtest.<br><br>
-                        <em>Passive, long-only accumulation with a weekly buy cooldown.</em>
+                        <em>Long-only accumulation; 5-day cooldown.</em>
                     </p>
                 </div>
         """,
