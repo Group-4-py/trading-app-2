@@ -78,7 +78,7 @@ The web application is built with **Streamlit** and structured as a multi-page a
 
 Two ML-driven trading strategies are implemented alongside a benchmark:
 
-- **Buy-and-Hold:** Scans the backtest for UP-prediction days, spreads capital across up to 12 bullish entry points, and never sells during the backtest.
+- **Buy-and-Hold:** Buys on UP-prediction days, waits one trading week before another buy, and never sells during the backtest.
 - **Buy-and-Sell:** Active trading — buys when model confidence for UP exceeds 50%, sells on bearish signals, after 3 days maximum hold, or at a 2% stop-loss.
 - **Benchmark:** Buys once on day one and holds the full period with no ML input, used as a baseline comparison.
 

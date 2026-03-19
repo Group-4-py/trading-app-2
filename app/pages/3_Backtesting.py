@@ -114,10 +114,10 @@ with s1:
                         📈 Buy & Hold
                     </h4>
                     <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
-                        Scan the full backtest for <span style="color: #00ff88;">▲ UP predictions</span>.<br>
-                        Spread capital across up to 12 bullish entry points.<br>
+                        Buy on a <span style="color: #00ff88;">▲ UP prediction</span>.<br>
+                        Wait 1 trading week before the next possible buy.<br>
                         Never sells during the backtest.<br><br>
-                        <em>Passive, long-only accumulation timed by ML signals.</em>
+                        <em>Passive, long-only accumulation with a weekly buy cooldown.</em>
                     </p>
                 </div>
         """,

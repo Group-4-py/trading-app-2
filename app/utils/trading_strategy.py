@@ -2,10 +2,9 @@
 Trading Strategy Module (Section 1.3 – Optional / Bonus)
 
 Implements two trading strategies and a backtesting engine:
-  1. Buy-and-Hold: scans the full prediction
-     window for bullish days, then spreads capital across up to `n_buy_ins`
-     evenly spaced buy-ins on those UP-signal dates.
-     It never sells during the backtest; it simply accumulates shares over time.
+  1. Buy-and-Hold: buys on each bullish signal, then waits one trading week
+     before it can buy again. It never sells during the backtest; it simply
+     accumulates shares over time.
 
   2. Buy-and-Sell: Active strategy using probability signals.
      Sells when model turns bearish OR max hold days reached.
@@ -31,15 +30,13 @@ def strategy_buy_and_hold(
     n_buy_ins: int = 12,
 ) -> pd.DataFrame:
     """
-    Buy-and-Hold Strategy:
-      - Scan the full backtest for days with an UP prediction
-      - Choose up to `n_buy_ins` bullish entry points, spaced across those UP days
-      - Split the initial capital into equal tranches for those planned entries
-      - On the final planned buy, deploy any remaining cash that can be invested
+    Simple Buy-and-Hold Strategy:
+      - BUY when the model gives an UP signal
+      - After buying, wait one trading week before buying again
       - Never sell during the backtest; the position is accumulated and held
 
     This is not the classic "buy once on day 0 and hold" benchmark. It is a
-    passive, long-only strategy that uses ML signals only to schedule staged
+    passive, long-only strategy that uses ML signals only to time additional
     entries. The true one-shot benchmark lives in `benchmark_buy_and_hold()`.
 
     Args:
@@ -47,7 +44,7 @@ def strategy_buy_and_hold(
         prices: Stock prices per step.
         initial_capital: Starting capital.
         transaction_cost: Per-trade cost as fraction of value.
-        n_buy_ins: Target number of equal buy-ins to spread capital across.
+        n_buy_ins: Retained for backward compatibility; unused.
 
     Returns:
         DataFrame with portfolio simulation results.
@@ -56,34 +53,24 @@ def strategy_buy_and_hold(
     cash = initial_capital
     shares = 0
     records = []
-
-    up_steps = np.flatnonzero(np.asarray(predictions).astype(int) == 1)
-    if len(up_steps) > 0:
-        planned_buy_count = min(max(n_buy_ins, 1), len(up_steps))
-        dca_positions = np.linspace(0, len(up_steps) - 1, num=planned_buy_count, dtype=int)
-        buy_steps = set(up_steps[np.unique(dca_positions)].tolist())
-    else:
-        planned_buy_count = 0
-        buy_steps = set()
-
-    tranche_size = initial_capital / planned_buy_count if planned_buy_count > 0 else 0.0
-    buys_executed = 0
+    cooldown_days = 5
+    next_buy_step = 0
 
     for i in range(n):
         price = prices[i]
         pred = int(predictions[i])
         action = "HOLD"
 
-        if i in buy_steps and cash >= price:
-            # Use the remaining cash on the final DCA entry to avoid leaving
-            # a small uninvested balance stranded by transaction costs.
-            deploy = cash if buys_executed == planned_buy_count - 1 else min(tranche_size, cash)
-            affordable = int(deploy / (price * (1 + transaction_cost)))
+        if pred == 1 and i >= next_buy_step and cash >= price:
+            remaining_steps = max(n - i, 1)
+            remaining_buy_windows = max(int(np.ceil(remaining_steps / cooldown_days)), 1)
+            tranche_budget = cash / remaining_buy_windows
+            affordable = int(tranche_budget / (price * (1 + transaction_cost)))
             if affordable > 0:
                 cost = affordable * price * (1 + transaction_cost)
                 cash -= cost
                 shares += affordable
-                buys_executed += 1
+                next_buy_step = i + cooldown_days
                 action = "BUY"
 
         portfolio_value = cash + shares * price

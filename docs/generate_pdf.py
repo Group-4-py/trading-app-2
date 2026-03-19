@@ -203,8 +203,8 @@ def build():
     pdf.section_title("6. Trading Strategies (Bonus)")
     pdf.body_text("Two ML-driven trading strategies are implemented alongside a benchmark:")
     pdf.bold_bullet("Buy-and-Hold",
-        "Scans the backtest for UP-prediction days, spreads capital across up to 12 "
-        "bullish entry points, and never sells during the backtest.")
+        "Buys on UP-prediction days, waits one trading week before another buy, "
+        "and never sells during the backtest.")
     pdf.bold_bullet("Buy-and-Sell",
         "Active trading: buys when model confidence for UP exceeds 50%, sells on bearish "
         "signals, after 3 days maximum hold, or at a 2% stop-loss.")

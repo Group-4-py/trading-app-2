@@ -421,23 +421,13 @@ This module implements three trading strategies that simulate a portfolio over h
 
 ### Strategy 1: `strategy_buy_and_hold(predictions, prices, initial_capital, ...)`
 
-<<<<<<< HEAD
-A dollar-cost averaging approach:
-=======
-The Buy-and-Hold strategy uses ML-guided staged accumulation:
->>>>>>> 8390a99 (Updated trading strategy with new Buy & Hold definition)
-1. Scans all days where the model predicts UP
-2. Selects `n_buy_ins` (default 12) evenly spaced entry points from those bullish days using `np.linspace`
-3. Splits the initial capital equally across those entry points
-4. On each selected day, buys as many shares as possible with the allocated amount (minus transaction costs)
-5. Never sells — accumulates shares over time
-6. The last buy-in deploys any remaining cash to avoid leaving a small uninvested balance
+The Buy-and-Hold strategy uses a simple long-only accumulation rule:
+1. Buys when the model predicts UP
+2. After each buy, waits 5 trading days before it can buy again
+3. Uses a fraction of remaining cash on each eligible buy so capital is deployed over time
+4. Never sells — accumulates shares over the full backtest
 
-<<<<<<< HEAD
-This strategy is conservative — it relies on the model only for timing its purchases.
-=======
-This strategy is passive and long-only — it relies on the model only for timing its staged entries, not for exits.
->>>>>>> 8390a99 (Updated trading strategy with new Buy & Hold definition)
+This strategy is passive and long-only — it uses the model only to time additional entries, not exits.
 
 ### Strategy 2: `strategy_buy_and_sell(probabilities, prices, initial_capital, ...)`
 
@@ -453,11 +443,7 @@ This generates many more trades because it responds to every model signal change
 
 ### Benchmark: `benchmark_buy_and_hold(prices, initial_capital)`
 
-<<<<<<< HEAD
-The simplest possible strategy: buy as many shares as possible on day 1, hold forever. No ML involved. Used as a baseline to evaluate whether the model adds value.
-=======
 The classic benchmark: buy as many shares as possible on day 1 and hold for the full period. No ML involved. Used as a baseline to evaluate whether the model adds value.
->>>>>>> 8390a99 (Updated trading strategy with new Buy & Hold definition)
 
 ### `compute_strategy_metrics(backtest_df, initial_capital)`
 
@@ -626,11 +612,7 @@ The strategy simulation page. Users configure parameters and compare three tradi
 - Checkboxes to enable/disable each of the three strategies
 - "Run Backtest" button
 
-<<<<<<< HEAD
-**Strategy definitions** — Three glass cards explaining Buy & Hold (ML), Buy & Sell (ML), and Benchmark (No ML).
-=======
 **Strategy definitions** — Three glass cards explaining Buy & Hold, Buy & Sell, and Benchmark.
->>>>>>> 8390a99 (Updated trading strategy with new Buy & Hold definition)
 
 **Backtest execution** (lines 174-223):
 
