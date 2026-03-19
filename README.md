@@ -145,7 +145,7 @@ SimFin (API or Bulk CSV)
 | **Home** | System overview, tracked companies, team profiles, technology stack |
 | **Go Live** | Stock selector, real-time OHLCV data, model prediction (UP/DOWN), trading signal (BUY/SELL/HOLD), technical charts |
 | **Model Insights** | Feature importance, confusion matrix, accuracy metrics, prediction distribution |
-| **Backtesting** | Strategy simulator comparing Buy-and-Hold (ML), Buy-and-Sell (ML), and Benchmark (no ML) with portfolio performance charts |
+| **Backtesting** | Strategy simulator comparing Buy-and-Hold, Buy-and-Sell, and Benchmark with portfolio performance charts |
 
 ---
 

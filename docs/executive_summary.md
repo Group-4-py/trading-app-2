@@ -68,7 +68,7 @@ The web application is built with **Streamlit** and structured as a multi-page a
 | **Home** | System overview, tracked companies with logos, team member profiles, technology stack description |
 | **Go Live** | Stock ticker selector, real-time OHLCV data via the PySimFin API wrapper, ETL applied to fresh data, model-generated trading signals (BUY/SELL/HOLD) displayed with confidence scores |
 | **Model Insights** | Feature importance rankings, confusion matrix, accuracy/precision/recall/F1 metrics, prediction distribution analysis |
-| **Backtesting** | Interactive strategy simulator comparing three approaches: Buy-and-Hold (ML-driven), Buy-and-Sell (active ML trading), and a no-ML Benchmark, with portfolio performance charts and metrics |
+| **Backtesting** | Interactive strategy simulator comparing Buy-and-Hold, Buy-and-Sell, and Benchmark, with portfolio performance charts and metrics |
 
 **PySimFin API Wrapper:** A custom object-oriented Python class handles all communication with the SimFin Data API. It includes rate limiting (max 2 requests/second), custom exception classes for authentication and rate-limit errors, and automatic response format conversion to Pandas DataFrames.
 
@@ -78,9 +78,9 @@ The web application is built with **Streamlit** and structured as a multi-page a
 
 Two ML-driven trading strategies are implemented alongside a benchmark:
 
-- **Buy-and-Hold (ML):** Spreads capital across up to 12 buy-ins on days the model predicts UP. Passive accumulation without selling.
-- **Buy-and-Sell (ML):** Active trading — buys when model confidence for UP exceeds 50%, sells on bearish signals, after 3 days maximum hold, or at a 2% stop-loss.
-- **Benchmark:** Simple buy-and-hold from day one with no ML input, used as a baseline comparison.
+- **Buy-and-Hold:** Scans the backtest for UP-prediction days, spreads capital across up to 12 bullish entry points, and never sells during the backtest.
+- **Buy-and-Sell:** Active trading — buys when model confidence for UP exceeds 50%, sells on bearish signals, after 3 days maximum hold, or at a 2% stop-loss.
+- **Benchmark:** Buys once on day one and holds the full period with no ML input, used as a baseline comparison.
 
 Performance metrics include total return, annualized return, Sharpe ratio, maximum drawdown, win rate, and total trades.
 

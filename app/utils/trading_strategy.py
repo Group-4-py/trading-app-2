@@ -2,11 +2,12 @@
 Trading Strategy Module (Section 1.3 – Optional / Bonus)
 
 Implements two trading strategies and a backtesting engine:
-  1. Buy-and-Hold (ML): Buys on UP signal, sells on price exits or signal flip.
-     Conservative — uses stop-loss, trailing stop, and profit target.
-     Fewer trades; stays in market during bullish runs.
+  1. Buy-and-Hold: scans the full prediction
+     window for bullish days, then spreads capital across up to `n_buy_ins`
+     evenly spaced buy-ins on those UP-signal dates.
+     It never sells during the backtest; it simply accumulates shares over time.
 
-  2. Buy-and-Sell (ML): Active strategy using probability signals.
+  2. Buy-and-Sell: Active strategy using probability signals.
      Sells when model turns bearish OR max hold days reached.
      More trades; forces rotation to act on every model signal.
 
@@ -30,15 +31,16 @@ def strategy_buy_and_hold(
     n_buy_ins: int = 12,
 ) -> pd.DataFrame:
     """
-    Buy-and-Hold Strategy (simple DCA):
-      - Look for all UP prediction days across the full backtest
-      - Spread capital across up to n_buy_ins equal buy-ins
-      - Execute those buy-ins on evenly spaced bullish entry points
-      - Never sell — accumulates shares over time
+    Buy-and-Hold Strategy:
+      - Scan the full backtest for days with an UP prediction
+      - Choose up to `n_buy_ins` bullish entry points, spaced across those UP days
+      - Split the initial capital into equal tranches for those planned entries
+      - On the final planned buy, deploy any remaining cash that can be invested
+      - Never sell during the backtest; the position is accumulated and held
 
-    This keeps the strategy passive while avoiding only a handful of early
-    buys. The result is a simple dollar-cost-averaging style accumulation
-    plan with more than 4 buy-ins by default.
+    This is not the classic "buy once on day 0 and hold" benchmark. It is a
+    passive, long-only strategy that uses ML signals only to schedule staged
+    entries. The true one-shot benchmark lives in `benchmark_buy_and_hold()`.
 
     Args:
         predictions: Binary model predictions (0=DOWN, 1=UP).
@@ -111,7 +113,7 @@ def strategy_buy_and_sell(
     max_hold_days: int = 3,
 ) -> pd.DataFrame:
     """
-    Active Buy-and-Sell Strategy using model probabilities:
+    Buy-and-Sell Strategy using model probabilities:
       - BUY when P(UP) >= buy_threshold and no current position
       - SELL when P(UP) < sell_threshold (model turns bearish)
       - SELL after max_hold_days regardless (forces rotation)
@@ -254,8 +256,8 @@ def benchmark_buy_and_hold(
     initial_capital: float = INITIAL_CAPITAL,
 ) -> pd.DataFrame:
     """
-    Simple benchmark: buy at the start and hold the entire period.
-    Used for comparison against the ML-based strategies.
+    Classic benchmark: buy once on the first bar and hold the entire period.
+    Used for comparison against the ML-based strategies above.
     """
     shares = int(initial_capital / prices[0])
     leftover_cash = initial_capital - shares * prices[0]

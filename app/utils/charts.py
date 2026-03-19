@@ -368,7 +368,7 @@ def portfolio_chart(
 
     Args:
         backtest_results: Dict of {strategy_name: backtest_df}
-        benchmark: Optional benchmark (buy-and-hold) DataFrame.
+        benchmark: Optional benchmark DataFrame.
         dates: Date series for x-axis.
     """
     fig = go.Figure()
@@ -387,7 +387,7 @@ def portfolio_chart(
         fig.add_trace(go.Scatter(
             x=x, y=benchmark["portfolio_value"], mode="lines",
             line=dict(color=TEXT_COLOR, width=1.5, dash="dash"),
-            name="Benchmark (Buy & Hold)",
+            name="Benchmark",
         ))
 
     return _apply_defaults(fig, height=420, title="Portfolio Performance Comparison")

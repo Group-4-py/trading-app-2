@@ -76,9 +76,9 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("#### Select Strategies")
 
-    run_bah = st.checkbox("Buy & Hold (ML)", value=True)
-    run_bas = st.checkbox("Buy & Sell (ML)", value=True)
-    run_benchmark = st.checkbox("Benchmark (No ML)", value=True)
+    run_bah = st.checkbox("Buy & Hold", value=True)
+    run_bas = st.checkbox("Buy & Sell", value=True)
+    run_benchmark = st.checkbox("Benchmark", value=True)
 
     st.markdown("---")
     run_backtest = st.button("🚀 Run Backtest", use_container_width=True)
@@ -109,17 +109,17 @@ s1, s2, s3 = st.columns(3)
 with s1:
     st.markdown(
         """
-        <div class="glass-card" style="min-height: 220px;">
-            <h4 style="font-family: 'Orbitron', sans-serif; color: #00d4ff !important; font-size: 0.85rem;">
-                📈 Buy & Hold (ML)
-            </h4>
-            <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
-                <span style="color: #00ff88;">▲ Predict UP</span> → buy-in<br>
-                Capital spread across up to 12 bullish entry points.<br>
-                Never sells.<br><br>
-                <em>Gradual accumulation across period.</em>
-            </p>
-        </div>
+                <div class="glass-card" style="min-height: 220px;">
+                    <h4 style="font-family: 'Orbitron', sans-serif; color: #00d4ff !important; font-size: 0.85rem;">
+                        📈 Buy & Hold
+                    </h4>
+                    <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
+                        Scan the full backtest for <span style="color: #00ff88;">▲ UP predictions</span>.<br>
+                        Spread capital across up to 12 bullish entry points.<br>
+                        Never sells during the backtest.<br><br>
+                        <em>Passive, long-only accumulation timed by ML signals.</em>
+                    </p>
+                </div>
         """,
         unsafe_allow_html=True,
     )
@@ -145,15 +145,15 @@ with s2:
 with s3:
     st.markdown(
         """
-        <div class="glass-card" style="min-height: 220px;">
-            <h4 style="font-family: 'Orbitron', sans-serif; color: #94a3b8 !important; font-size: 0.85rem;">
-                📊 Benchmark (No ML)
-            </h4>
-            <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
-                Buy at day 1, hold the entire period.<br>
-                No predictions or active trading.<br><br>
-                <em>Baseline to evaluate if the ML model adds value over simply holding.</em>
-            </p>
+                <div class="glass-card" style="min-height: 220px;">
+                    <h4 style="font-family: 'Orbitron', sans-serif; color: #94a3b8 !important; font-size: 0.85rem;">
+                        📊 Benchmark
+                    </h4>
+                    <p style="color: #94a3b8 !important; font-size: 0.85rem; line-height: 1.7;">
+                        Buy once on day 1 and hold the entire period.<br>
+                        No predictions or active trading.<br><br>
+                        <em>Baseline to evaluate if the ML model adds value over simply holding.</em>
+                    </p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -197,16 +197,16 @@ if _needs_rerun:
                 predictions, prices, initial_capital,
                 transaction_cost=transaction_cost,
             )
-            results["Buy & Hold (ML)"] = bt_bah
-            metrics_dict["Buy & Hold (ML)"] = compute_strategy_metrics(bt_bah, initial_capital)
+            results["Buy & Hold"] = bt_bah
+            metrics_dict["Buy & Hold"] = compute_strategy_metrics(bt_bah, initial_capital)
 
         if run_bas:
             bt_bas = strategy_buy_and_sell(
                 probabilities, prices, initial_capital,
                 transaction_cost=transaction_cost,
             )
-            results["Buy & Sell (ML)"] = bt_bas
-            metrics_dict["Buy & Sell (ML)"] = compute_strategy_metrics(bt_bas, initial_capital)
+            results["Buy & Sell"] = bt_bas
+            metrics_dict["Buy & Sell"] = compute_strategy_metrics(bt_bas, initial_capital)
 
         bench = None
         if run_benchmark:

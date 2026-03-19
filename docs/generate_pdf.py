@@ -186,7 +186,7 @@ def build():
     pdf.table_row(["Home", "System overview, tracked companies, team profiles, tech stack"], widths)
     pdf.table_row(["Go Live", "Real-time data via API, ETL on fresh data, ML predictions and trading signals"], widths)
     pdf.table_row(["Model Insights", "Feature importance, confusion matrix, accuracy metrics, distributions"], widths)
-    pdf.table_row(["Backtesting", "Strategy simulator: Buy-and-Hold, Buy-and-Sell, Benchmark comparison"], widths)
+    pdf.table_row(["Backtesting", "Strategy simulator: Buy-and-Hold, Buy-and-Sell, and Benchmark comparison"], widths)
     pdf.ln(4)
     pdf.body_text(
         "The PySimFin API Wrapper is a custom object-oriented Python class that handles all "
@@ -202,14 +202,14 @@ def build():
     # ── 6. Trading Strategies ────────────────────────────────────────
     pdf.section_title("6. Trading Strategies (Bonus)")
     pdf.body_text("Two ML-driven trading strategies are implemented alongside a benchmark:")
-    pdf.bold_bullet("Buy-and-Hold (ML)",
-        "Spreads capital across up to 12 buy-ins on days the model predicts UP. "
-        "Passive accumulation without selling.")
-    pdf.bold_bullet("Buy-and-Sell (ML)",
+    pdf.bold_bullet("Buy-and-Hold",
+        "Scans the backtest for UP-prediction days, spreads capital across up to 12 "
+        "bullish entry points, and never sells during the backtest.")
+    pdf.bold_bullet("Buy-and-Sell",
         "Active trading: buys when model confidence for UP exceeds 50%, sells on bearish "
         "signals, after 3 days maximum hold, or at a 2% stop-loss.")
     pdf.bold_bullet("Benchmark",
-        "Simple buy-and-hold from day one with no ML input, used as a baseline.")
+        "Buys once on day one and holds the full period with no ML input, used as a baseline.")
     pdf.body_text(
         "Performance metrics include total return, annualized return, Sharpe ratio, maximum "
         "drawdown, win rate, and total trades."
