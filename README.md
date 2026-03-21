@@ -2,7 +2,7 @@
 
 An automated daily trading system that uses machine learning to predict next-day stock price movements for five major US companies. Built with Python, Streamlit, and scikit-learn.
 
-**Live Application:** [https://your-app-url.streamlit.app](https://your-app-url.streamlit.app) *(update after deployment)*
+**Live Application:** [https://autotrader4.streamlit.app/) *(update after deployment)*
 
 ---
 
