@@ -2,7 +2,7 @@
 📈 Go Live – Real-Time Predictions & Trading Signals
 Displays market data, runs ETL + model, and shows predictions.
 """
-
+import sys
 import streamlit as st
 import pandas as pd
 import numpy as np
