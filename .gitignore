@@ -15,7 +15,7 @@ __pycache__/
 .env.*
 .venv/
 venv/
-.python-version
+
 .streamlit/secrets.toml
 app/.streamlit/secrets.toml
 
