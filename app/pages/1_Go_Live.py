@@ -9,6 +9,10 @@ import numpy as np
 import base64
 import os
 
+
+APP_DIR = os.path.dirname(os.path.abspath(__file__))  # or os.path.dirname(os.path.dirname(...)) for pages
+if APP_DIR not in sys.path:
+    sys.path.insert(0, APP_DIR)
 st.set_page_config(page_title="Go Live | AutoTrader", page_icon="📈", layout="wide")
 
 from utils.style import inject_custom_css

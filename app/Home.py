@@ -3,8 +3,18 @@
 Main landing page (Streamlit entry point).
 """
 
-import base64
+
+import sys
 import os
+
+# ── Fix Python path for Streamlit Cloud deployment ─────────────────────
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+if APP_DIR not in sys.path:
+    sys.path.insert(0, APP_DIR)
+
+
+import base64
+
 
 import streamlit as st
 
