@@ -129,8 +129,8 @@ with ov2:
     )
 
 with ov3:
-    train_samples = "N/A" if metrics["train_samples"] is None else f"{metrics['train_samples']:,}"
-    test_samples = "N/A" if metrics["test_samples"] is None else f"{metrics['test_samples']:,}"
+    train_samples = "N/A" if metrics.get("train_samples") is None else f"{metrics['train_samples']:,}"
+    test_samples = "N/A" if metrics.get("test_samples") is None else f"{metrics['test_samples']:,}"
     st.markdown(
         f"""
         <div class="glass-card">
@@ -155,11 +155,11 @@ st.markdown("### Model Performance Metrics")
 st.markdown("")
 
 mc1, mc2, mc3, mc4, mc5 = st.columns(5)
-mc1.metric("Accuracy", "N/A" if pd.isna(metrics["accuracy"]) else f"{metrics['accuracy']:.1%}")
-mc2.metric("Precision", "N/A" if pd.isna(metrics["precision"]) else f"{metrics['precision']:.1%}")
-mc3.metric("Recall", "N/A" if pd.isna(metrics["recall"]) else f"{metrics['recall']:.1%}")
-mc4.metric("F1 Score", "N/A" if pd.isna(metrics["f1_score"]) else f"{metrics['f1_score']:.1%}")
-mc5.metric("AUC-ROC", "N/A" if pd.isna(metrics["auc_roc"]) else f"{metrics['auc_roc']:.3f}")
+mc1.metric("Accuracy", "N/A" if pd.isna(metrics.get("accuracy", np.nan)) else f"{metrics['accuracy']:.1%}")
+mc2.metric("Precision", "N/A" if pd.isna(metrics.get("precision", np.nan)) else f"{metrics['precision']:.1%}")
+mc3.metric("Recall", "N/A" if pd.isna(metrics.get("recall", np.nan)) else f"{metrics['recall']:.1%}")
+mc4.metric("F1 Score", "N/A" if pd.isna(metrics.get("f1_score", np.nan)) else f"{metrics['f1_score']:.1%}")
+mc5.metric("AUC-ROC", "N/A" if pd.isna(metrics.get("auc_roc", np.nan)) else f"{metrics['auc_roc']:.3f}")
 
 st.markdown("")
 
