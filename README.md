@@ -2,7 +2,7 @@
 
 An automated daily trading system that uses machine learning to predict next-day stock price movements for five major US companies. Built with Python, Streamlit, and scikit-learn.
 
-**Live Application:** [https://autotrader4.streamlit.app/) *(update after deployment)*
+**Live Application:** [https://autotrader4.streamlit.app/)
 
 ---
 
@@ -33,14 +33,14 @@ An automated daily trading system that uses machine learning to predict next-day
 ## Installation
 
 ### Prerequisites
-- Python 3.11+
+- Python 3.11
 - A SimFin API key (free at [simfin.com](https://www.simfin.com/)) — optional, the app runs in demo mode without one
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/python-2-group-project.git
+git clone https://github.com/Group-4-py/trading-app-2.git
 cd python-2-group-project
 
 # Create and activate a virtual environment
