@@ -1,6 +1,6 @@
 # AI Usage Log – Automated Daily Trading System
 
-This document reflects how AI (mainly Claude Code, Perplexity and CODEX) was used throughout the development of this project, what worked well, what was harder to get right, and what lessons were learned about effective AI-assisted development.
+This document reflects how AI (mainly Claude Code, Perplexity and CODEX) was used throughout the development of this project, what worked well, what was harder to get right, and what lessons were learned about effective AI-assisted development. 
 
 ---
 ## 1. Designing the Overall ETL and Model Architecture
