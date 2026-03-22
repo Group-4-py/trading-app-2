@@ -491,14 +491,17 @@ def returns_distribution_chart(df: pd.DataFrame) -> go.Figure:
     ))
 
     # Normal distribution overlay
-    x_range = np.linspace(returns.min(), returns.max(), 100)
-    from scipy.stats import norm
-    mu, std = returns.mean(), returns.std()
-    y_norm = norm.pdf(x_range, mu, std) * len(returns) * (returns.max() - returns.min()) / 50
-    fig.add_trace(go.Scatter(
-        x=x_range, y=y_norm, mode="lines",
-        line=dict(color=YELLOW, width=2, dash="dash"),
-        name="Normal Dist.",
-    ))
+    try:
+        from scipy.stats import norm
+        x_range = np.linspace(returns.min(), returns.max(), 100)
+        mu, std = returns.mean(), returns.std()
+        y_norm = norm.pdf(x_range, mu, std) * len(returns) * (returns.max() - returns.min()) / 50
+        fig.add_trace(go.Scatter(
+            x=x_range, y=y_norm, mode="lines",
+            line=dict(color=YELLOW, width=2, dash="dash"),
+            name="Normal Dist.",
+        ))
+    except ImportError:
+        pass  # skip normal curve overlay if scipy unavailable
 
     return _apply_defaults(fig, height=300, title="Daily Returns Distribution")
