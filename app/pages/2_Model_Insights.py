@@ -145,7 +145,7 @@ with ov3:
                 <strong style="color: #e2e8f0;">Training:</strong> {train_samples} samples<br>
                 <strong style="color: #e2e8f0;">Testing:</strong> {test_samples} samples<br>
                 <strong style="color: #e2e8f0;">Features:</strong> {len(MODEL_FEATURES)}<br>
-                <strong style="color: #e2e8f0;">Model:</strong> StandardScalar + LogitRegression
+                <strong style="color: #e2e8f0;">Model:</strong> LogitRegression
             </p>
         </div>
         """,
@@ -359,13 +359,13 @@ with tab_model:
         `ml/model/all_tickers_model.joblib`. If that file is missing, it falls back to a
         heuristic DummyClassifier.
 
-        **Recommended approaches (Part 1):**
+        **Next models that will be avaiable on the app:**
         - **Logistic Regression** — Simple baseline, fast training
         - **Random Forest** — Captures non-linear feature interactions
         - **Gradient Boosting (XGBoost / LightGBM)** — State-of-the-art for tabular data
         - **SVM** — Effective in high-dimensional feature spaces
 
-        **Input:** 20 numerical features (normalized technical indicators)
+        **Input:** 21 numerical features (normalized technical indicators)
 
         **Output:** Binary prediction (0 = DOWN, 1 = UP) + class probabilities
 
