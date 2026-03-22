@@ -1,4 +1,4 @@
-# AutoTrader — AI-Powered Daily Trading System
+# AutoTrader — AI-Powered Daily Trading Application
 
 An automated daily trading system that uses machine learning to predict next-day stock price movements for five major US companies. Built with Python, Streamlit, and scikit-learn.
 
