@@ -104,6 +104,7 @@ To retrain the ML model from scratch:
 │   ├── raw/                    # Raw SimFin downloads (gitignored)
 │   └── processed/              # Processed parquet feature files
 ├── notebooks/                  # Jupyter notebooks (ETL exploration)
+│   └── etl_exploration.ipynb   # Exploratory Analysis of Raw Data
 ├── docs/                       # Documentation
 │   └── executive_summary.pdf   # Executive summary for stakeholders
 ├── requirements.txt            # Python dependencies
